@@ -1,0 +1,8 @@
+@import '../../../styles/variables';
+
+.layout-children {
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: $linear;
+}

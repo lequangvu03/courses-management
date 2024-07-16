@@ -1,0 +1,109 @@
+@import '../../styles/variables';
+
+.table__header-wrapper {
+  padding: 0 30px;
+}
+
+.table__header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  align-items: center;
+  border-bottom: 1px solid $grey;
+}
+
+.table__name {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.actions__wrapper {
+  display: flex;
+  align-items: center;
+}
+.button__sort {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+.button__add {
+  cursor: pointer;
+  border: none;
+  background: $primary;
+  margin-left: 30px;
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  padding: 14px 26px;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: $light;
+  text-align: center;
+}
+
+.table__actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+:global(.button) {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  flex-shrink: 0;
+}
+
+:global(.pagination) {
+  margin-top: 32px;
+}
+
+.table__wrapper {
+  overflow-x: auto;
+  table {
+    table-layout: auto;
+  }
+  // padding: 0 30px;
+}
+
+.avatar__wrapper {
+  padding: 15px 32px 15px 13px;
+}
+
+.avatar__image {
+  height: 55px;
+  width: 65px;
+  overflow: hidden;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.table__students {
+  border-collapse: separate;
+  border-spacing: 20px;
+}
+.pagination-wrapper {
+  padding: 0 30px;
+}
+
+@media (min-width: 1025px) {
+  .table__wrapper {
+    max-width: calc(100vw - 2 * 30px - 270px);
+    margin-left: 30px;
+  }
+
+  .table__students {
+    min-width: 1024px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .table__wrapper {
+    max-width: calc(100vw - 2 * 30px - 70px);
+    margin-left: 30px;
+  }
+
+  .table__students {
+    width: 1024px;
+  }
+}

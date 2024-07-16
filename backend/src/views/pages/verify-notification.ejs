@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 30px;
+      }
+      body {
+        text-align: center;
+        padding: 40px 0;
+        min-height: 100vh;
+        background: #ebf0f5;
+      }
+      #success, #failed {
+        font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+
+      #success{
+        color: #88b04b;
+
+      } 
+      #failed{
+        color: #ff0000;
+      }
+
+      p {
+        color: #404f5e;
+        font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif;
+        font-size: 20px;
+        margin: 0;
+      }
+      .button-signin{
+        display: block;
+        text-decoration: none;
+        padding: 12px 32px;
+        border-radius:8px;
+        background: orange;
+        color: #000;
+        width: fit-content;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 24px;
+      }
+    </style>
+   
+  </head>
+  <body>
+    <div class="container">
+      <% if (success) { %>
+          <h1 id="success">Success</h1>
+          <p><%= message %></p>
+          <a href="http://localhost:3080/sign-in?email=<%= email %>" class="button-signin">Sign in</a>
+      <%} else { %>
+          <h1 id="failed">Failed</h1>
+          <p><%= message %></p>
+      <% } %>
+
+    </div>
+  </body>
+</html>

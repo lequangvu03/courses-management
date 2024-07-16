@@ -1,0 +1,19 @@
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout-sidebar {
+  flex-shrink: 0;
+}
+
+.layout-main {
+  flex: 1;
+}
+
+.layout-children {
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 72px;
+}

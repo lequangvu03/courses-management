@@ -1,0 +1,74 @@
+@import '../../../styles/variables';
+
+.signin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 60px 0;
+}
+
+.signin__content {
+  width: 100%;
+  max-width: 475px;
+  border-radius: 16px;
+  background: $light;
+  padding: 44px 30px 41px;
+}
+
+.form__title {
+  margin-bottom: 9px;
+  margin-top: 43px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.signin__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form__desc {
+  font-size: 14px;
+}
+.form {
+  margin-top: 50px;
+}
+.field__input {
+  width: 100%;
+  border-radius: 6px;
+  padding: 14px;
+  border: 1px solid $grey;
+  outline: none;
+}
+
+.form__footer {
+  margin-top: 27px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.reset-password {
+  color: $primary;
+  text-decoration: underline;
+}
+
+.signin__button {
+  height: auto;
+  background: $primary;
+  margin-top: 30px;
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  padding: 14px 0;
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: $light;
+}

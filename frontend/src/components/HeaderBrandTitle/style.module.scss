@@ -1,0 +1,14 @@
+@import '../../styles/variables';
+
+.brand__title {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-left: 6px solid #f8d442;
+  padding-left: 12.5px;
+  font-size: 32px;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1;
+  color: $dark;
+}

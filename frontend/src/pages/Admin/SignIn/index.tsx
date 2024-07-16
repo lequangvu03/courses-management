@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import HeaderBrandTitle from '../../../components/HeaderBrandTitle'
 import Input from '../../../components/Input'
 import { privateAdminRoutes } from '../../../config/admin.routes'
-import { publicUserRoutes } from '../../../config/user.routes'
+import { privateUserRoutes, publicUserRoutes } from '../../../config/user.routes'
 import { Role } from '../../../constants/enums'
 import { useLoginMutation } from '../../../hooks/data/auth.data'
 import useAuth from '../../../hooks/useAuth'
@@ -20,25 +20,25 @@ function SignIn() {
   const navigate = useNavigate()
   const { setIsAuthenticated } = useAuth()
   const { location, params } = useQueryParams()
-
   const [form] = Form.useForm<ILoginFormData>()
 
   const loginUserMutation = useLoginMutation()
+  const isAdmin = isAdminRoute(location.pathname)
 
   const onFinish = async (value: ILoginFormData) => {
     const { email, password } = value
     try {
-      if (isAdminRoute(location.pathname)) {
+      if (isAdmin) {
         const response = await loginUserMutation.mutateAsync({ email, password, role: Role.Admin })
         setIsAuthenticated(true)
-        navigate(privateAdminRoutes.home, {
+        navigate(privateAdminRoutes.dashboard, {
           replace: true
         })
         message.success(response.data.message)
       } else {
         const response = await loginUserMutation.mutateAsync({ email, password })
         setIsAuthenticated(true)
-        navigate(privateAdminRoutes.home, {
+        navigate(privateUserRoutes.home, {
           replace: true
         })
         message.success(response.data.message)
@@ -65,6 +65,7 @@ function SignIn() {
             <div className={cx('form__desc')}>Enter your credentials to access your account</div>
           </header>
           <Form
+            autoComplete='on'
             form={form}
             className={cx('form')}
             layout='vertical'
@@ -91,6 +92,7 @@ function SignIn() {
             />
 
             <Input
+              type='password'
               label='Password'
               name='password'
               placeholder='Enter your password'
@@ -111,7 +113,12 @@ function SignIn() {
               ]}
             />
 
-            <Button htmlType='submit' className={cx('signin__button')}>
+            <Button
+              htmlType='submit'
+              loading={loginUserMutation.isPending}
+              disabled={loginUserMutation.isPending}
+              className={cx('signin__button')}
+            >
               {isAdminRoute(location.pathname) ? <span>Sign in</span> : <span>Sign up</span>}
             </Button>
           </Form>

@@ -1,9 +1,10 @@
-import { UserVerifyStatus } from '../constants/enums'
+import { Role, UserVerifyStatus } from '../constants/enums'
 
 export interface IUser {
   _id?: string
   name?: string
   email: string
+  role: Role
   verify: UserVerifyStatus
   date_of_birth?: number
   avatar?: string

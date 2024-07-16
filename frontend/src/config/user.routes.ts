@@ -4,5 +4,6 @@ export const publicUserRoutes = {
 } as const
 
 export const privateUserRoutes = {
-  home: '/'
+  home: '/',
+  courses: '/courses'
 } as const

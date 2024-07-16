@@ -17,9 +17,12 @@ const passwordLoginShema: ParamSchema = {
   },
   custom: {
     options: async (value, { req }) => {
+      const { role } = req.body
+
       const user = await databaseService.users.findOne({
         email: req.body.email,
-        password: hashPassword(value)
+        password: hashPassword(value),
+        role: role || Role.User
       })
 
       if (!user) {
@@ -142,12 +145,12 @@ export const accessTokenValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const access_token = (value || '').split('Bearer ')[1]
-            if (!access_token) {
-              throw new ServerError({
-                message: 'Access token is invalid',
-                status: HTTP_RESPONSE_STATUS_CODES.UNAUTHORIZED
-              })
-            }
+            // if (!access_token) {
+            //   throw new ServerError({
+            //     message: 'Access token is invalid',
+            //     status: HTTP_RESPONSE_STATUS_CODES.UNAUTHORIZED
+            //   })
+            // }
 
             try {
               const decoded_access_token = await verifyToken({
@@ -195,6 +198,9 @@ export const refreshTokenValidator = validate(
                 }),
                 databaseService.refreshTokens.findOne({ token: value })
               ])
+              console.log(decoded_refresh_token)
+              console.log(refresh_token)
+
               if (!refresh_token) {
                 throw new ServerError({
                   message: 'Refresh token does not exist',

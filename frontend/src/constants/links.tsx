@@ -12,7 +12,7 @@ const navlinks: TNavLink[] = [
   {
     id: 1,
     label: 'Home',
-    to: privateAdminRoutes.home,
+    to: privateAdminRoutes.dashboard,
     icon: icons.home
   },
   {

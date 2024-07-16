@@ -5,7 +5,7 @@ import styles from './style.module.scss'
 
 const cx = classNames.bind(styles)
 
-function Home() {
+function Dashboard() {
   return (
     <div className={cx('home-wrapper')}>
       <div className={cx('home-content')}>
@@ -17,4 +17,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Dashboard

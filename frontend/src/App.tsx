@@ -1,28 +1,32 @@
 import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom'
 
 import { privateAdminRoutes, publicAdminRoutes } from './config/admin.routes'
-import { publicUserRoutes } from './config/user.routes'
+import { privateUserRoutes, publicUserRoutes } from './config/user.routes'
 import useAuth from './hooks/useAuth'
 import MainLayout from './layouts/AdminLayout/MainLayout'
 import AuthLayout from './layouts/CommonLayout/AuthLayout'
-import Course from './pages/Admin/Course'
-import Home from './pages/Admin/Home'
-import Payment from './pages/Admin/Payment'
-import Report from './pages/Admin/Report'
-import Settings from './pages/Admin/Settings'
-import SignIn from './pages/Admin/SignIn'
-import SignUp from './pages/SignUp'
-import Student from './pages/Admin/Students'
+import { isAdminRoute } from './lib/utils'
+import Course from './pages/Admin/course'
+import Dashboard from './pages/Admin/dashboard'
+import Payment from './pages/Admin/payment'
+import Report from './pages/Admin/report'
+import Settings from './pages/Admin/settings'
+import SignIn from './pages/Admin/signIn'
+import Student from './pages/Admin/students'
+import Home from './pages/home'
+import MyCourses from './pages/myCourses'
+import SignUp from './pages/signup'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAuth()
   const location = useLocation()
+  const isAdmin = isAdminRoute(location.pathname)
 
   return isAuthenticated ? (
     <Outlet />
   ) : (
     <Navigate
-      to={publicAdminRoutes.signin}
+      to={isAdmin ? publicAdminRoutes.signin : publicUserRoutes.signin}
       state={{
         from: location
       }}
@@ -33,21 +37,28 @@ function ProtectedRoute() {
 
 function RejectedRoute() {
   const { isAuthenticated } = useAuth()
+  const location = useLocation()
+  const isAdmin = isAdminRoute(location.pathname)
 
-  return isAuthenticated ? <Navigate to={privateAdminRoutes.home} /> : <Outlet />
+  return isAuthenticated ? (
+    <Navigate to={isAdmin ? privateAdminRoutes.dashboard : privateUserRoutes.home} />
+  ) : (
+    <Outlet />
+  )
 }
 
 function App() {
   const elements = useRoutes([
+    //* Admin routes
     {
-      path: privateAdminRoutes.home,
+      path: privateAdminRoutes.dashboard,
       element: <ProtectedRoute />,
       children: [
         {
-          path: privateAdminRoutes.home,
+          path: privateAdminRoutes.dashboard,
           element: (
             <MainLayout>
-              <Home />
+              <Dashboard />
             </MainLayout>
           )
         },
@@ -94,7 +105,7 @@ function App() {
       ]
     },
     {
-      path: privateAdminRoutes.home,
+      path: privateAdminRoutes.dashboard,
       element: <RejectedRoute />,
       children: [
         {
@@ -107,21 +118,50 @@ function App() {
         }
       ]
     },
+    //* User routes
     {
-      path: publicUserRoutes.signin,
-      element: (
-        <AuthLayout>
-          <SignIn />
-        </AuthLayout>
-      )
+      path: privateUserRoutes.home,
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: privateUserRoutes.courses,
+          element: (
+            <AuthLayout>
+              <MyCourses />
+            </AuthLayout>
+          )
+        },
+        {
+          path: privateUserRoutes.home,
+          element: (
+            <AuthLayout>
+              <Home />
+            </AuthLayout>
+          )
+        }
+      ]
     },
     {
-      path: publicUserRoutes.signup,
-      element: (
-        <AuthLayout>
-          <SignUp />
-        </AuthLayout>
-      )
+      path: privateUserRoutes.home,
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: publicUserRoutes.signin,
+          element: (
+            <AuthLayout>
+              <SignIn />
+            </AuthLayout>
+          )
+        },
+        {
+          path: publicUserRoutes.signup,
+          element: (
+            <AuthLayout>
+              <SignUp />
+            </AuthLayout>
+          )
+        }
+      ]
     }
   ])
   return <div>{elements}</div>

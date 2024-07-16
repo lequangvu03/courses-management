@@ -13,12 +13,14 @@ interface InputProps {
   className?: string
   dependencies?: string[]
   initialValue?: string | null
+  type?: 'password' | 'text'
 }
 
-function Input({ placeholder, name, label, initialValue, rules, className, dependencies }: InputProps) {
+function Input({ placeholder, name, label, initialValue, rules, className, dependencies, type = 'text' }: InputProps) {
+  const InputComponent = type === 'password' ? AntInput.Password : AntInput
   return (
     <Form.Item initialValue={initialValue || ''} name={name} label={label} rules={rules} dependencies={dependencies}>
-      <AntInput className={cx('field__input', className)} placeholder={placeholder} />
+      <InputComponent className={cx('field__input', className)} placeholder={placeholder} />
     </Form.Item>
   )
 }

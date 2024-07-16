@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 import HTTP_RESPONSE_STATUS_CODES from '../constants/http-status-codes'
 import { ErrorResponse } from '../types/responses'
 import { IUser } from '../types/types'
+import { Role } from '../constants/enums'
 
 export const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
 
@@ -53,6 +54,13 @@ export const setRefreshTokenToCookie = (refresh_token: string) => {
 export const getRefreshTokenFromCookie = () => {
   return Cookies.get('refresh_token') || ''
 }
+export const setRoleToCookie = (role: Role) => {
+  Cookies.set('role', JSON.stringify(role))
+}
+export const getRoleFromCookie = () => {
+  const role = Cookies.get('role')
+  return role ? +role : undefined
+}
 
 export const setProfileToCookie = (profile: IUser) => {
   Cookies.set('profile', JSON.stringify(profile), {
@@ -69,6 +77,7 @@ export const removeAuthFromCookie = () => {
   Cookies.remove('access_token')
   Cookies.remove('refresh_token')
   Cookies.remove('profile')
+  Cookies.remove('role')
 }
 
 export const isAdminRoute = (pathname: string) => {

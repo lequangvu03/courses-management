@@ -41,7 +41,7 @@ function Sidebar({ className }: SidebarProps) {
         {navlinks.map(({ id, label, to, icon }) => (
           <li key={id} className={cx('nav__item')}>
             <NavLink
-              end={to === privateAdminRoutes.home}
+              end={to === privateAdminRoutes.dashboard}
               className={({ isActive }) =>
                 cx(cx('nav__item--link'), {
                   active: isActive

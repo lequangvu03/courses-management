@@ -7,7 +7,8 @@ import {
   removeAuthFromCookie,
   setAccessTokenToLocalCookie,
   setProfileToCookie,
-  setRefreshTokenToCookie
+  setRefreshTokenToCookie,
+  setRoleToCookie
 } from '../lib/utils'
 import { AuthResponse, RefreshTokenResponse } from '../types/responses'
 
@@ -30,7 +31,6 @@ class Request {
       (config) => {
         this.accessToken = getAccessTokenFromCookie()
         this.refreshToken = getRefreshTokenFromCookie()
-
         if (this.accessToken && config.headers) {
           config.headers.Authorization = `Bearer ${this.accessToken}`
         }
@@ -44,13 +44,13 @@ class Request {
       (response) => {
         const { url } = response.config
         console.log('URL: ', url)
-        if (url === '/auth/login') {
-          const { data, message } = response.data as AuthResponse
-          console.log(message)
+        if (url?.includes('/login')) {
+          const { data } = response.data as AuthResponse
           const { access_token, refresh_token } = data
           setAccessTokenToLocalCookie(access_token)
           setRefreshTokenToCookie(refresh_token)
           setProfileToCookie(data.user)
+          setRoleToCookie(data.user.role)
         }
 
         if (url === '/auth/logout') {

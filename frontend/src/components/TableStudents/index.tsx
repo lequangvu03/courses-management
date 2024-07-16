@@ -1,9 +1,9 @@
-import { Table, TableProps, Pagination, Popconfirm, notification } from 'antd'
-import { TStudent } from '../../types/students'
-import icons from '../../assets/icons'
-import styles from './style.module.scss'
+import { Pagination, Popconfirm, Table, TableProps, notification } from 'antd'
 import classNames from 'classnames/bind'
+import icons from '../../assets/icons'
 import images from '../../assets/images'
+import { TStudent } from '../../types/students'
+import styles from './style.module.scss'
 
 const cx = classNames.bind(styles)
 

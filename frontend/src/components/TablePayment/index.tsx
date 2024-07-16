@@ -1,9 +1,7 @@
 import classNames from 'classnames/bind'
 import { TPayment } from '../../types/payments'
-import icons from '../../assets/icons'
 import styles from './style.module.scss'
 const cx = classNames.bind(styles)
-import { Table } from 'antd'
 type TablePaymentProps = {
   payments: TPayment[]
 }

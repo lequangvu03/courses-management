@@ -1,7 +1,7 @@
 import { IUser } from '../types/types'
-import { getAccessTokenFromCookie, getProfileFromCookie } from '../lib/utils'
+import { getProfileFromCookie, getRefreshTokenFromCookie, getRoleFromCookie, isAdminRoute } from '../lib/utils'
 import { createContext, ReactNode, useState } from 'react'
-import { UserVerifyStatus } from '../constants/enums'
+import { Role, UserVerifyStatus } from '../constants/enums'
 
 export interface IAppContext {
   isAuthenticated: boolean
@@ -13,9 +13,10 @@ export interface IAppContext {
 
 const initialState: IAppContext = {
   isAuthenticated:
-    Boolean(getAccessTokenFromCookie()) &&
+    Boolean(getRefreshTokenFromCookie()) &&
     getProfileFromCookie() &&
     (getProfileFromCookie() as IUser).verify === UserVerifyStatus.Verify,
+
   profile: getProfileFromCookie(),
   setIsAuthenticated: () => null,
   setProfile: () => null,
@@ -25,7 +26,13 @@ const initialState: IAppContext = {
 export const AppContext = createContext(initialState)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialState.isAuthenticated)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const role = getRoleFromCookie()
+    const isAdmin = isAdminRoute(location.pathname) || role === Role.Admin
+    const isUser = !isAdminRoute(location.pathname) || role === Role.User
+
+    return (initialState.isAuthenticated && isUser) || (initialState.isAuthenticated && isAdmin)
+  })
   const [profile, setProfile] = useState<IUser | null>(initialState.profile)
 
   const reset = () => {

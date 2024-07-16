@@ -4,8 +4,7 @@ export const publicAdminRoutes = {
 } as const
 
 export const privateAdminRoutes = {
-  home: '/admin',
-  dashboard: '/admin/dashboard',
+  dashboard: '/admin',
   payment: '/admin/payment',
   students: '/admin/students',
   course: '/admin/course',

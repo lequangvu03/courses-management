@@ -49,8 +49,15 @@ function SignUp() {
             onFinishFailed={onFinishFailed}
           >
             <Input placeholder='Enter your email' label='Email' name='email' rules={rules.email} />
-            <Input placeholder='Enter your password' label='Password' name='password' rules={rules.password} />
             <Input
+              placeholder='Enter your password'
+              type='password'
+              label='Password'
+              name='password'
+              rules={rules.password}
+            />
+            <Input
+              type='password'
               placeholder='Enter your confirm password'
               label='Password'
               name='confirm_password'

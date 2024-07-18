@@ -99,7 +99,6 @@ class Request {
       })
       .then((res) => {
         const { access_token } = res.data.data
-        console.log('refresh', access_token)
         this.accessToken = access_token
         setAccessTokenToLocalCookie(access_token)
         return this.accessToken

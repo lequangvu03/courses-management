@@ -37,7 +37,7 @@ export const isAxiosExpiredAccessTokenError = <ExpiredAccessTokenError>(
 
 export const setAccessTokenToLocalCookie = (access_token: string) => {
   Cookies.set('access_token', access_token, {
-    expires: 5 / 1440
+    expires: 1 / 1440
   })
 }
 
@@ -55,7 +55,9 @@ export const getRefreshTokenFromCookie = () => {
   return Cookies.get('refresh_token') || ''
 }
 export const setRoleToCookie = (role: Role) => {
-  Cookies.set('role', JSON.stringify(role))
+  Cookies.set('role', JSON.stringify(role), {
+    expires: 7
+  })
 }
 export const getRoleFromCookie = () => {
   const role = Cookies.get('role')

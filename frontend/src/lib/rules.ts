@@ -19,12 +19,13 @@ const rules: Record<'email' | 'password' | 'confirm_password', Rule[]> = {
       message: 'Password is required'
     },
     {
-      min: 6,
-      message: 'Password must be at least 6 letters'
-    },
-    {
       max: 50,
       message: "The password's length cannot exceed 50 letters"
+    },
+    {
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})/,
+      message:
+        'Password must be at least 6 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.'
     }
   ],
   confirm_password: [

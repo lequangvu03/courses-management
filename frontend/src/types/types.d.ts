@@ -21,3 +21,11 @@ export interface IRegisterFormData {
   password: string
   confirm_password: string
 }
+
+export interface IResetPasswordFormData {
+  email: string
+  new_password: string
+  confirm_new_password: string
+  otp_id: string
+  role?: Role
+}

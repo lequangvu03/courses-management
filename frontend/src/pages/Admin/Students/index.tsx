@@ -11,14 +11,13 @@ const cx = classNames.bind(styles)
 function Students() {
   const [isTrue, setIsTrue] = useState<boolean>(false)
   const { data } = useQuery({
-    queryKey: ['Students'],
-    queryFn: () => request.get('/students'),
-    enabled: isTrue
+    queryKey: ['Students', isTrue],
+    queryFn: () => request.get('/students')
   })
 
   return (
     <div className={cx('min-h-screen bg-[#F8F8F8] px-[30px]')}>
-      <Button onClick={() => setIsTrue(true)}>Get students</Button>
+      <Button onClick={() => setIsTrue((prev) => !prev)}>Get students</Button>
       <TableStudents students={data?.data?.data as TStudent[]} />
     </div>
   )

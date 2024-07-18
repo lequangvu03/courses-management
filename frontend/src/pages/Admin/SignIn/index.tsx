@@ -1,29 +1,30 @@
 import { Button, Form, message } from 'antd'
 import classNames from 'classnames/bind'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import HeaderBrandTitle from '../../../components/HeaderBrandTitle'
 import Input from '../../../components/Input'
-import { privateAdminRoutes } from '../../../config/admin.routes'
+import { privateAdminRoutes, publicAdminRoutes } from '../../../config/admin.routes'
 import { privateUserRoutes, publicUserRoutes } from '../../../config/user.routes'
 import { Role } from '../../../constants/enums'
 import { useLoginMutation } from '../../../hooks/data/auth.data'
 import useAuth from '../../../hooks/useAuth'
 import useQueryParams from '../../../hooks/useQueryParams'
 import { handlerError } from '../../../lib/handlers'
-import { isAdminRoute } from '../../../lib/utils'
 import { ILoginFormData } from '../../../types/types'
 import styles from './style.module.scss'
+import rules from '../../../lib/rules'
+import useAdminRoute from '../../../hooks/useDetectRoute'
 
 const cx = classNames.bind(styles)
 
 function SignIn() {
   const navigate = useNavigate()
   const { setIsAuthenticated } = useAuth()
-  const { location, params } = useQueryParams()
+  const { params } = useQueryParams()
+  const { isAdmin } = useAdminRoute()
   const [form] = Form.useForm<ILoginFormData>()
 
   const loginUserMutation = useLoginMutation()
-  const isAdmin = isAdminRoute(location.pathname)
 
   const onFinish = async (value: ILoginFormData) => {
     const { email, password } = value
@@ -78,17 +79,7 @@ function SignIn() {
               label='Email'
               placeholder='Enter your email'
               initialValue={params.get('email')}
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: 'Email is required'
-                },
-                {
-                  pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-                  message: 'Email is invalid'
-                }
-              ]}
+              rules={rules.email}
             />
 
             <Input
@@ -96,21 +87,7 @@ function SignIn() {
               label='Password'
               name='password'
               placeholder='Enter your password'
-              rules={[
-                {
-                  required: true,
-                  whitespace: true,
-                  message: 'Password is required'
-                },
-                {
-                  min: 6,
-                  message: 'Password must be at least 6 letters'
-                },
-                {
-                  max: 50,
-                  message: "The password's length cannot exceed 50 letters"
-                }
-              ]}
+              rules={rules.password}
             />
 
             <Button
@@ -119,22 +96,25 @@ function SignIn() {
               disabled={loginUserMutation.isPending}
               className={cx('signin__button')}
             >
-              {isAdminRoute(location.pathname) ? <span>Sign in</span> : <span>Sign up</span>}
+              <span>Sign in</span>
             </Button>
           </Form>
           <div className={cx('form__footer')}>
             <div>Forgot your password?&nbsp;</div>
-            <a href='#' className={cx('reset-password')}>
+            <Link
+              to={isAdmin ? publicAdminRoutes.resetPassword : publicUserRoutes.resetPassword}
+              className={cx('footer__link')}
+            >
               Reset Password
-            </a>
+            </Link>
           </div>
           <div className={cx('form__footer')}>
-            {!isAdminRoute(location.pathname) && (
+            {!isAdmin && (
               <>
                 <div>Don't have a account?&nbsp;</div>
-                <NavLink to={publicUserRoutes.signup} className={cx('reset-password')}>
+                <Link to={publicUserRoutes.signup} className={cx('footer__link')}>
                   Sign up
-                </NavLink>
+                </Link>
               </>
             )}
           </div>

@@ -28,11 +28,13 @@ export const AppContext = createContext(initialState)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     const role = getRoleFromCookie()
-    const isAdmin = isAdminRoute(location.pathname) || role === Role.Admin
-    const isUser = !isAdminRoute(location.pathname) || role === Role.User
+    const isAdmin = isAdminRoute(location.pathname) && role === Role.Admin
+    const isUser = !isAdminRoute(location.pathname) && role === Role.User
 
-    return (initialState.isAuthenticated && isUser) || (initialState.isAuthenticated && isAdmin)
+    return (initialState.isAuthenticated && isAdmin) || (initialState.isAuthenticated && isUser)
   })
+
+  console.log(isAuthenticated)
   const [profile, setProfile] = useState<IUser | null>(initialState.profile)
 
   const reset = () => {

@@ -6,16 +6,19 @@ import { ServerError } from '~/models/Errors'
 import User from '~/models/schemas/user.model'
 import { ResponseObject } from '~/models/ResponseObject'
 import databaseService from '~/services/database.services'
-import userService from '~/services/admin.services'
+import userService from '~/services/user.services'
 import {
   LoginReqBody,
   LogoutReqBody,
   RegisterReqBody,
   ResendEmailReqBody,
-  TokenPayload
+  ResetPasswordReqBody,
+  TokenPayload,
+  VerifyOTPReqBody
 } from '~/types/requests/auth.requests'
-import { UserVerifyStatus } from '~/constants/enums'
+import { Role, UserVerifyStatus } from '~/constants/enums'
 import { omit } from 'lodash'
+import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const { _id, verify, role } = req.user as User
@@ -146,6 +149,57 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Logou
   res.json(
     new ResponseObject({
       message: 'Logout successfully',
+      data: {}
+    })
+  )
+}
+
+export const requestChangePasswordController = async (
+  req: Request<ParamsDictionary, any, { email: string; role?: Role }>,
+  res: Response
+) => {
+  const { email } = req.body
+  const { _id } = req.user as User
+  const record = await userService.requestChangePassword({
+    email,
+    user_id: String(_id)
+  })
+
+  res.json(
+    new ResponseObject({
+      message: 'Your OTP has been sent to your registered email address. The OTP is valid for the next 120 seconds',
+      data: record
+    })
+  )
+}
+
+export const verifyOTPController = async (req: Request<ParamsDictionary, any, VerifyOTPReqBody>, res: Response) => {
+  const { _id } = req.otp as ForgotPasswordOTP
+
+  await userService.verifyOTP({
+    otp_id: String(_id)
+  })
+
+  res.json(
+    new ResponseObject({
+      message: 'OTP verified successfully. You can now proceed to reset your password!',
+      data: {}
+    })
+  )
+}
+
+export const resetPasswordController = async (
+  req: Request<ParamsDictionary, any, ResetPasswordReqBody>,
+  res: Response
+) => {
+  const { new_password } = req.body
+  const { _id, user_id } = req.otp as ForgotPasswordOTP
+
+  await userService.resetPassword({ otp_id: String(_id), new_password, user_id: String(user_id) })
+
+  return res.json(
+    new ResponseObject({
+      message: 'Reset password successfully. You can login to your account now!',
       data: {}
     })
   )

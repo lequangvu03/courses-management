@@ -1,20 +1,20 @@
 import { Button, Form, message } from 'antd'
 import classNames from 'classnames/bind'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import HeaderBrandTitle from '../../components/HeaderBrandTitle'
 import Input from '../../components/Input'
 import { publicUserRoutes } from '../../config/user.routes'
 import { useRegisterMutation } from '../../hooks/data/auth.data'
 import { handlerError } from '../../lib/handlers'
 import rules from '../../lib/rules'
-import { isAdminRoute } from '../../lib/utils'
 import { IRegisterFormData } from '../../types/types'
 import styles from './style.module.scss'
+import useAdminRoute from '../../hooks/useDetectRoute'
 const cx = classNames.bind(styles)
 
 function SignUp() {
-  const location = useLocation()
   const registerMutation = useRegisterMutation()
+  const { isAdmin } = useAdminRoute()
   const [form] = Form.useForm<IRegisterFormData>()
 
   const onFinish = async (data: IRegisterFormData) => {
@@ -64,12 +64,17 @@ function SignUp() {
               dependencies={['password']}
               rules={rules.confirm_password}
             />
-            <Button loading={registerMutation.isPending} htmlType='submit' className={cx('signup__button')}>
-              Register
+            <Button
+              loading={registerMutation.isPending}
+              disabled={registerMutation.isPending}
+              htmlType='submit'
+              className={cx('signup__button')}
+            >
+              Sign up
             </Button>
           </Form>
           <div className={cx('form__footer')}>
-            {!isAdminRoute(location.pathname) && (
+            {!isAdmin && (
               <>
                 <div>Already have a account?&nbsp;</div>
                 <NavLink to={publicUserRoutes.signin} className={cx('reset-password')}>

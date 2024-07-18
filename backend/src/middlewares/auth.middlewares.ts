@@ -5,11 +5,13 @@ import envs from '~/constants/env-variables'
 import HTTP_RESPONSE_STATUS_CODES from '~/constants/http-status-codes'
 import { ServerError } from '~/models/Errors'
 import databaseService from '~/services/database.services'
-import userService from '~/services/admin.services'
+import userService from '~/services/user.services'
 import { hashPassword } from '~/utils/crypto'
 import { verifyToken } from '~/utils/jwt'
 import validate from '~/utils/validate'
-import { Role } from '~/constants/enums'
+import { OTPVerifyStatus, Role } from '~/constants/enums'
+import { Request } from 'express'
+import { ObjectId } from 'mongodb'
 
 const passwordLoginShema: ParamSchema = {
   notEmpty: {
@@ -46,7 +48,8 @@ const passwordRegisterShema: ParamSchema = {
     errorMessage: 'Password length must be from 6-50 characters'
   },
   isStrongPassword: {
-    errorMessage: 'Password is not strong enough',
+    errorMessage:
+      'Password must be at least 6 characters long and include at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.',
     options: {
       minLength: 6,
       minLowercase: 1,
@@ -265,5 +268,158 @@ export const emailVerifyTokenValidator = validate(
       }
     },
     ['query']
+  )
+)
+
+export const requestChangePasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: 'Email is required'
+        },
+        isEmail: {
+          errorMessage: 'Email is invalid'
+        },
+        trim: true,
+        custom: {
+          options: async (value, { req }) => {
+            const { role } = req.body
+            const user = await databaseService.users.findOne({
+              role: (role && +role) || Role.User,
+              email: value
+            })
+
+            if (!user) {
+              throw new Error('Email does not exist')
+            }
+
+            ;(req as Request).user = user
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+
+export const verifyOTPValidator = validate(
+  checkSchema(
+    {
+      forgot_password_otp: {
+        trim: true,
+        isNumeric: true,
+        custom: {
+          options: async (forgot_password_otp, { req }) => {
+            const { otp_id } = req.body
+
+            if (!forgot_password_otp) {
+              throw new Error('OTP is required')
+            }
+
+            const otp = await databaseService.forgotPasswordOTP.findOne({
+              _id: new ObjectId(otp_id as string),
+              otp: forgot_password_otp
+            })
+
+            if (!otp) {
+              throw new Error('OTP is invalid')
+            }
+
+            const now = Date.now()
+            const { expires_at } = otp
+
+            if (now > expires_at) {
+              throw new Error('OTP is expired')
+            }
+
+            ;(req as Request).otp = otp
+            return true
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)
+export const resetPasswordValidator = validate(
+  checkSchema(
+    {
+      email: {
+        notEmpty: {
+          errorMessage: 'Email is required'
+        },
+        isEmail: {
+          errorMessage: 'Email is invalid'
+        },
+        trim: true,
+        custom: {
+          options: async (value, { req }) => {
+            const { role } = req.body
+
+            const user = await databaseService.users.findOne({
+              role: (role && +role) || Role.User,
+              email: value
+            })
+
+            if (!user) {
+              throw new Error('Account does not exist')
+            }
+
+            ;(req as Request).user = user
+            return true
+          }
+        }
+      },
+      new_password: passwordRegisterShema,
+      confirm_new_password: {
+        notEmpty: {
+          errorMessage: 'Confirm password is required'
+        },
+        isLength: {
+          options: {
+            min: 6,
+            max: 50
+          },
+          errorMessage: 'Confirm password length must be from 6-50 characters'
+        },
+        custom: {
+          options: async (confirm_new_password, { req }) => {
+            if (confirm_new_password !== req.body.new_password) {
+              throw new Error('Confirm password does not match')
+            }
+            return true
+          }
+        }
+      },
+      otp_id: {
+        trim: true,
+        notEmpty: {
+          errorMessage: 'OTP is invalid'
+        },
+        custom: {
+          options: async (value, { req }) => {
+            const otp = await databaseService.forgotPasswordOTP.findOne({
+              _id: new ObjectId(value as string)
+            })
+
+            if (!otp) {
+              throw new Error('OTP is invalid')
+            }
+
+            if (otp?.status === OTPVerifyStatus.Unverified) {
+              throw new ServerError({
+                message: 'Permission denied',
+                status: HTTP_RESPONSE_STATUS_CODES.UNAUTHORIZED
+              })
+            }
+            ;(req as Request).otp = otp
+            return true
+          }
+        }
+      }
+    },
+    ['body']
   )
 )

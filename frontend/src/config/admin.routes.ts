@@ -1,6 +1,7 @@
 export const publicAdminRoutes = {
   signin: '/admin/sign-in',
-  signup: '/admin/sign-up'
+  signup: '/admin/sign-up',
+  resetPassword: '/admin/reset-password'
 } as const
 
 export const privateAdminRoutes = {

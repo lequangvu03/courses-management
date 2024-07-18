@@ -16,6 +16,7 @@ import Student from './pages/Admin/students'
 import Home from './pages/home'
 import MyCourses from './pages/myCourses'
 import SignUp from './pages/signup'
+import ResetPassword from './pages/Admin/resetPassword'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAuth()
@@ -162,6 +163,23 @@ function App() {
           )
         }
       ]
+    },
+    // Reset password
+    {
+      path: publicUserRoutes.resetPassword,
+      element: (
+        <AuthLayout>
+          <ResetPassword />
+        </AuthLayout>
+      )
+    },
+    {
+      path: publicAdminRoutes.resetPassword,
+      element: (
+        <AuthLayout>
+          <ResetPassword />
+        </AuthLayout>
+      )
     }
   ])
   return <div>{elements}</div>

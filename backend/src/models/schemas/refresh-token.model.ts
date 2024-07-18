@@ -10,7 +10,7 @@ interface IRefreshToken {
 export class RefreshToken implements IRefreshToken {
   _id?: ObjectId
   token: string
-  created_at?: number | undefined
+  created_at?: number
   user_id: ObjectId
 
   constructor({ _id, token, user_id, created_at }: IRefreshToken) {

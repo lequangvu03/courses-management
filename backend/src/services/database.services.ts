@@ -1,6 +1,7 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 import envs from '~/constants/env-variables'
 import env from '~/constants/env-variables'
+import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'
 import { RefreshToken } from '~/models/schemas/refresh-token.model'
 import User from '~/models/schemas/user.model'
 
@@ -21,6 +22,10 @@ class DatabaseService {
 
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(envs.dbRefreshTokenName)
+  }
+
+  get forgotPasswordOTP(): Collection<ForgotPasswordOTP> {
+    return this.db.collection(envs.dbTableForgotPasswordOTP)
   }
 
   async connect() {

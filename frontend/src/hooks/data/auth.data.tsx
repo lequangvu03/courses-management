@@ -18,4 +18,29 @@ const useLogoutMutation = () => {
   })
 }
 
-export { useLoginMutation, useLogoutMutation, useRegisterMutation }
+const useRequestChangePasswordMutation = () => {
+  return useMutation({
+    mutationFn: authApi.requestChangePassword
+  })
+}
+
+const useVerifyOTPMutation = () => {
+  return useMutation({
+    mutationFn: authApi.verifyOTP
+  })
+}
+
+const useResetPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authApi.resetPassword
+  })
+}
+
+export {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useRequestChangePasswordMutation,
+  useResetPasswordMutation,
+  useVerifyOTPMutation
+}

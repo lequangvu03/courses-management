@@ -1,3 +1,4 @@
+import { OTPVerifyStatus } from '../constants/enums'
 import { IUser } from './types'
 
 export interface SuccessResponse<TData> {
@@ -20,10 +21,9 @@ export type AuthResponse = SuccessResponse<{
   user: IUser
 }>
 
-export type EntityError = {
-  location: string
-  msg: string
-  path: string
-  type: string
-  value: string
-}
+export type RequestChangePasswordResponse = SuccessResponse<{
+  _id: string
+  status: OTPVerifyStatus
+  expires_at: number
+  created_at: number
+}>

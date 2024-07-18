@@ -32,3 +32,15 @@ export interface ResendEmailReqBody {
 export interface LogoutReqBody {
   refresh_token: string
 }
+
+export interface VerifyOTPReqBody {
+  forgot_password_otp: string
+  otp_id: string
+}
+export interface ResetPasswordReqBody {
+  email: string
+  new_password: string
+  confirm_new_password: string
+  otp_id: string
+  role?: Role
+}

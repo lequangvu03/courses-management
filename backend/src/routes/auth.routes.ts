@@ -1,15 +1,13 @@
 import { Router } from 'express'
 import {
-  getStudentsController,
   loginController,
   logoutController,
   refreshTokenController,
   requestChangePasswordController,
   resetPasswordController,
   verifyOTPController
-} from '~/controllers/user.controllers'
+} from '~/controllers/auth.controllers'
 import {
-  accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
   emailVerifyTokenValidator,
@@ -19,7 +17,7 @@ import {
   verifyOTPValidator
 } from '~/middlewares/auth.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
-import { registerController, verifyEmailController } from '~/controllers/user.controllers'
+import { registerController, verifyEmailController } from '~/controllers/auth.controllers'
 
 const authRouter = Router()
 
@@ -29,7 +27,7 @@ const authRouter = Router()
  * body: {email: string, password: string}
  */
 
-authRouter.post('/auth/login', loginValidator, wrapRequestHandler(loginController))
+authRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 /**
  * path: /auth/refresh-token
@@ -37,7 +35,7 @@ authRouter.post('/auth/login', loginValidator, wrapRequestHandler(loginControlle
  * body: {refresh_token: string}
  */
 
-authRouter.post('/auth/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
+authRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 /**
  * path: /auth/resend-verify-token
@@ -45,7 +43,7 @@ authRouter.post('/auth/refresh-token', refreshTokenValidator, wrapRequestHandler
  * body: {email: string}
  */
 
-authRouter.post('/auth/logout', refreshTokenValidator, wrapRequestHandler(logoutController))
+authRouter.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutController))
 
 /**
  * path: /auth/register
@@ -53,7 +51,7 @@ authRouter.post('/auth/logout', refreshTokenValidator, wrapRequestHandler(logout
  * body:{ email: string, password: string, confirm_password}
  */
 
-authRouter.post('/auth/register', registerValidator, wrapRequestHandler(registerController))
+authRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 
 /**
  * path: /auth/verify-email?token=<email_verified_token>
@@ -61,7 +59,7 @@ authRouter.post('/auth/register', registerValidator, wrapRequestHandler(register
  * query: {token: string}
  */
 
-authRouter.get('/auth/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController))
+authRouter.get('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController))
 
 /**
  * path: /auth/request-reset-password
@@ -70,7 +68,7 @@ authRouter.get('/auth/verify-email', emailVerifyTokenValidator, wrapRequestHandl
  */
 
 authRouter.post(
-  '/auth/request-reset-password',
+  '/request-reset-password',
   requestChangePasswordValidator,
   wrapRequestHandler(requestChangePasswordController)
 )
@@ -81,7 +79,7 @@ authRouter.post(
  * body: { forgot_password_otp: string, otp_id: string }
  */
 
-authRouter.post('/auth/verify-otp', verifyOTPValidator, wrapRequestHandler(verifyOTPController))
+authRouter.post('/verify-otp', verifyOTPValidator, wrapRequestHandler(verifyOTPController))
 
 /**
  * path: /auth/reset-password
@@ -89,14 +87,6 @@ authRouter.post('/auth/verify-otp', verifyOTPValidator, wrapRequestHandler(verif
  * body: { email: string, new_password: string, confirm_new_password: string, role?: Role }
  */
 
-authRouter.put('/auth/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
-
-/**
- * path: /students
- * method: GET
- * headers: { Authorization: Bearer <access_token> }
- */
-
-authRouter.get('/students', accessTokenValidator, wrapRequestHandler(getStudentsController))
+authRouter.put('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
 
 export default authRouter

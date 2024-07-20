@@ -1,7 +1,9 @@
 import { Pagination, Popconfirm, Table, TableProps, notification } from 'antd'
 import classNames from 'classnames/bind'
+import { Link } from 'react-router-dom'
 import icons from '../../assets/icons'
 import images from '../../assets/images'
+import { privateAdminRoutes } from '../../config/admin.routes'
 import { TStudent } from '../../types/students'
 import styles from './style.module.scss'
 
@@ -65,9 +67,9 @@ const columns: TableProps<DataType>['columns'] = [
     dataIndex: 'id',
     render: (id) => (
       <div className={cx('table__actions')}>
-        <button className={cx('button button__edit')}>
+        <Link to={`/admin/students/edit/${id}`} className={cx('button button__edit')}>
           <img src={icons.pen} />
-        </button>
+        </Link>
         <Popconfirm
           title='Delete the student'
           description='Are you sure to delete this student?'
@@ -125,9 +127,9 @@ function TableStudents({ students }: TableStudentsProps) {
             <button className={cx('button__sort')}>
               <img src={icons.sort} alt='icon' />
             </button>
-            <button type='submit' className={cx('button__add')}>
+            <Link to={privateAdminRoutes.addStudent} className={cx('button__add')}>
               ADD NEW STUDENT
-            </button>
+            </Link>
           </div>
         </header>
       </div>

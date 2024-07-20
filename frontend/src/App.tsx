@@ -17,6 +17,7 @@ import Home from './pages/home'
 import MyCourses from './pages/myCourses'
 import SignUp from './pages/signup'
 import ResetPassword from './pages/Admin/resetPassword'
+import StudentUpsert from './pages/Admin/studentUpsert'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useAuth()
@@ -76,6 +77,22 @@ function App() {
           element: (
             <MainLayout>
               <Student />
+            </MainLayout>
+          )
+        },
+        {
+          path: privateAdminRoutes.addStudent,
+          element: (
+            <MainLayout>
+              <StudentUpsert />
+            </MainLayout>
+          )
+        },
+        {
+          path: privateAdminRoutes.editStudent,
+          element: (
+            <MainLayout>
+              <StudentUpsert />
             </MainLayout>
           )
         },

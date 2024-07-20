@@ -98,9 +98,10 @@ class Request {
         refresh_token: this.refreshToken
       })
       .then((res) => {
-        const { access_token } = res.data.data
+        const { access_token, refresh_token } = res.data.data
         this.accessToken = access_token
         setAccessTokenToLocalCookie(access_token)
+        setRefreshTokenToCookie(refresh_token)
         return this.accessToken
       })
       .catch((error) => {

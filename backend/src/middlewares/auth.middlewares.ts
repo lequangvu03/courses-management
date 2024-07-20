@@ -5,7 +5,7 @@ import envs from '~/constants/env-variables'
 import HTTP_RESPONSE_STATUS_CODES from '~/constants/http-status-codes'
 import { ServerError } from '~/models/Errors'
 import databaseService from '~/services/database.services'
-import userService from '~/services/user.services'
+import userService from '~/services/auth.services'
 import { hashPassword } from '~/utils/crypto'
 import { verifyToken } from '~/utils/jwt'
 import validate from '~/utils/validate'
@@ -148,12 +148,6 @@ export const accessTokenValidator = validate(
         custom: {
           options: async (value, { req }) => {
             const access_token = (value || '').split('Bearer ')[1]
-            // if (!access_token) {
-            //   throw new ServerError({
-            //     message: 'Access token is invalid',
-            //     status: HTTP_RESPONSE_STATUS_CODES.UNAUTHORIZED
-            //   })
-            // }
 
             try {
               const decoded_access_token = await verifyToken({

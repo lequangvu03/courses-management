@@ -14,13 +14,33 @@ interface InputProps {
   dependencies?: string[]
   initialValue?: string | null
   type?: 'password' | 'text'
+  hidden?: boolean
+  autoComplete?: 'on' | 'off'
 }
 
-function Input({ placeholder, name, label, initialValue, rules, className, dependencies, type = 'text' }: InputProps) {
+function Input({
+  placeholder,
+  name,
+  label,
+  initialValue,
+  rules,
+  className,
+  dependencies,
+  type = 'text',
+  hidden,
+  autoComplete = 'off'
+}: InputProps) {
   const InputComponent = type === 'password' ? AntInput.Password : AntInput
   return (
-    <Form.Item initialValue={initialValue || ''} name={name} label={label} rules={rules} dependencies={dependencies}>
-      <InputComponent className={cx('field__input', className)} placeholder={placeholder} />
+    <Form.Item
+      initialValue={initialValue || ''}
+      name={name}
+      label={label}
+      rules={rules}
+      dependencies={dependencies}
+      hidden={hidden}
+    >
+      <InputComponent autoComplete={autoComplete} className={cx('field__input', className)} placeholder={placeholder} />
     </Form.Item>
   )
 }

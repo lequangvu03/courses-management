@@ -9,6 +9,7 @@ const envs = {
   dbRefreshTokenName: process.env.DB_REFRESH_TOKEN_TABLE_NAME as string,
   dbTableUserName: process.env.DB_USER_TABLE_NAME as string,
   dbTableForgotPasswordOTP: process.env.DB_FORGOT_PASSWORD_OTP_TABLE_NAME as string,
+  dbTableStudent: process.env.DB_STUDENT_TABLE_NAME as string,
   passwordSecret: process.env.PASSWORD_SECRET as string,
   accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY as string,
   refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY as string,

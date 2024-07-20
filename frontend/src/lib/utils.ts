@@ -75,6 +75,15 @@ export const getProfileFromCookie = () => {
   return profile ? JSON.parse(profile) : null
 }
 
+export const setRememberMeToCookie = (value: boolean) => {
+  Cookies.set('remember_me', JSON.stringify(value))
+}
+
+export const getRememberMeFromCookie = () => {
+  const isRememerMe = Cookies.get('remember_me')
+  return isRememerMe ? JSON.parse(isRememerMe) : false
+}
+
 export const removeAuthFromCookie = () => {
   Cookies.remove('access_token')
   Cookies.remove('refresh_token')

@@ -8,6 +8,8 @@ export const privateAdminRoutes = {
   dashboard: '/admin',
   payment: '/admin/payment',
   students: '/admin/students',
+  addStudent: '/admin/students/add',
+  editStudent: '/admin/students/edit/:id',
   course: '/admin/course',
   settings: '/admin/settings',
   report: '/admin/report'

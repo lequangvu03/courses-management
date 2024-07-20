@@ -6,7 +6,7 @@ import { ServerError } from '~/models/Errors'
 import User from '~/models/schemas/user.model'
 import { ResponseObject } from '~/models/ResponseObject'
 import databaseService from '~/services/database.services'
-import userService from '~/services/user.services'
+import userService from '~/services/auth.services'
 import {
   LoginReqBody,
   LogoutReqBody,
@@ -94,11 +94,11 @@ export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, { refresh_token: string }>,
   res: Response
 ) => {
-  const { user_id, verify } = req.decoded_refresh_token as TokenPayload
+  const { user_id, verify, role } = req.decoded_refresh_token as TokenPayload
 
   const { refresh_token } = req.body
 
-  const result = await userService.refreshToken({ refresh_token, user_id, verify })
+  const result = await userService.refreshToken({ refresh_token, user_id, verify, role })
   return res.json(
     new ResponseObject({
       message: 'Refresh token successfully',
@@ -203,39 +203,4 @@ export const resetPasswordController = async (
       data: {}
     })
   )
-}
-
-export const getStudentsController = async (req: Request, res: Response) => {
-  res.json({
-    message: 'Get list of students successfully',
-    data: [
-      {
-        id: 1,
-        avatar: '',
-        name: 'Vu',
-        email: 'vu@gmail.com',
-        phone: '0388025148',
-        enrollNumber: '456',
-        dateOfAdmission: 'efg'
-      },
-      {
-        id: 2,
-        avatar: '',
-        name: 'Huyen',
-        email: 'huyen@gmail.com',
-        phone: '0388025148',
-        enrollNumber: '789',
-        dateOfAdmission: 'hik'
-      },
-      {
-        id: 3,
-        avatar: '',
-        name: 'Test',
-        email: 'test@gmail.com',
-        phone: '123456789',
-        enrollNumber: '012',
-        dateOfAdmission: 'bhw'
-      }
-    ]
-  })
 }

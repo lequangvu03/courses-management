@@ -13,6 +13,7 @@ export interface ErrorResponse<TData> {
 
 export type RefreshTokenResponse = SuccessResponse<{
   access_token: string
+  refresh_token: string
 }>
 
 export type AuthResponse = SuccessResponse<{

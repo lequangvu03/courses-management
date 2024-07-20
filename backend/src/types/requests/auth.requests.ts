@@ -44,3 +44,14 @@ export interface ResetPasswordReqBody {
   otp_id: string
   role?: Role
 }
+
+export interface StudentReqBody {
+  avatar: string
+  name: string
+  email: string
+  phone: string
+  enrollNumber: string
+  dateOfAdmission: string
+}
+
+export interface EditStudentReqBody extends Partial<StudentReqBody> {}

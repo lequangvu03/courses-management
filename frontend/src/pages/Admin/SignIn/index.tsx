@@ -1,5 +1,7 @@
-import { Button, Form, message } from 'antd'
+import { Button, Checkbox, Flex, Form, message } from 'antd'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import classNames from 'classnames/bind'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import HeaderBrandTitle from '../../../components/HeaderBrandTitle'
 import Input from '../../../components/Input'
@@ -8,12 +10,13 @@ import { privateUserRoutes, publicUserRoutes } from '../../../config/user.routes
 import { Role } from '../../../constants/enums'
 import { useLoginMutation } from '../../../hooks/data/auth.data'
 import useAuth from '../../../hooks/useAuth'
+import useAdminRoute from '../../../hooks/useDetectRoute'
 import useQueryParams from '../../../hooks/useQueryParams'
 import { handlerError } from '../../../lib/handlers'
+import rules from '../../../lib/rules'
+import { getRememberMeFromCookie, setRememberMeToCookie } from '../../../lib/utils'
 import { ILoginFormData } from '../../../types/types'
 import styles from './style.module.scss'
-import rules from '../../../lib/rules'
-import useAdminRoute from '../../../hooks/useDetectRoute'
 
 const cx = classNames.bind(styles)
 
@@ -22,12 +25,14 @@ function SignIn() {
   const { setIsAuthenticated } = useAuth()
   const { params } = useQueryParams()
   const { isAdmin } = useAdminRoute()
-  const [form] = Form.useForm<ILoginFormData>()
+  const [rememberMe, setRememberMe] = useState<boolean>(getRememberMeFromCookie())
+  const [form] = Form.useForm<ILoginFormData & { remember_me: boolean }>()
 
   const loginUserMutation = useLoginMutation()
 
-  const onFinish = async (value: ILoginFormData) => {
-    const { email, password } = value
+  const handleLogin = async (value: ILoginFormData & { remember_me: boolean }) => {
+    const { email, password, remember_me } = value
+    console.log('Remember me', remember_me)
     try {
       if (isAdmin) {
         const response = await loginUserMutation.mutateAsync({ email, password, role: Role.Admin })
@@ -51,9 +56,10 @@ function SignIn() {
       })
     }
   }
-
-  const onFinishFailed = (errors: unknown) => {
-    console.log(errors)
+  const handleRememberMe = (e: CheckboxChangeEvent) => {
+    const isRememberMe = e.target.checked
+    setRememberMeToCookie(isRememberMe)
+    setRememberMe(isRememberMe)
   }
 
   return (
@@ -65,16 +71,9 @@ function SignIn() {
             <h3 className={cx('form__title')}>Sign In</h3>
             <div className={cx('form__desc')}>Enter your credentials to access your account</div>
           </header>
-          <Form
-            autoComplete='on'
-            form={form}
-            className={cx('form')}
-            layout='vertical'
-            requiredMark={false}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
+          <Form form={form} className={cx('form')} layout='vertical' requiredMark={false} onFinish={handleLogin}>
             <Input
+              autoComplete={rememberMe ? 'on' : 'off'}
               name='email'
               label='Email'
               placeholder='Enter your email'
@@ -83,12 +82,19 @@ function SignIn() {
             />
 
             <Input
+              autoComplete={rememberMe ? 'on' : 'off'}
               type='password'
               label='Password'
               name='password'
               placeholder='Enter your password'
               rules={rules.password}
             />
+            <Form.Item name='remember_me'>
+              <Flex gap={8} align='center'>
+                <Checkbox id='remember-me' checked={rememberMe} onChange={handleRememberMe} />
+                <label htmlFor='remember-me'>Remember me</label>
+              </Flex>
+            </Form.Item>
 
             <Button
               htmlType='submit'
@@ -99,6 +105,7 @@ function SignIn() {
               <span>Sign in</span>
             </Button>
           </Form>
+
           <div className={cx('form__footer')}>
             <div>Forgot your password?&nbsp;</div>
             <Link

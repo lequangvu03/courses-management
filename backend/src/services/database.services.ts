@@ -1,11 +1,11 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 import envs from '~/constants/env-variables'
-import env from '~/constants/env-variables'
 import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'
 import { RefreshToken } from '~/models/schemas/refresh-token.model'
+import Student from '~/models/schemas/student.model'
 import User from '~/models/schemas/user.model'
 
-const uri = `mongodb+srv://${env.dbUsername}:${env.dbPassword}@twitter.o34ippp.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`
+const uri = `mongodb+srv://${envs.dbUsername}:${envs.dbPassword}@twitter.o34ippp.mongodb.net/?retryWrites=true&w=majority&appName=Twitter`
 
 class DatabaseService {
   private client: MongoClient
@@ -13,7 +13,7 @@ class DatabaseService {
 
   constructor() {
     this.client = new MongoClient(uri)
-    this.db = this.client.db(process.env.DB_NAME)
+    this.db = this.client.db(envs.dbName)
   }
 
   get users(): Collection<User> {
@@ -28,6 +28,9 @@ class DatabaseService {
     return this.db.collection(envs.dbTableForgotPasswordOTP)
   }
 
+  get students(): Collection<Student> {
+    return this.db.collection(envs.dbTableStudent)
+  }
   async connect() {
     try {
       await this.client.connect()

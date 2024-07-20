@@ -1,23 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
-import TableStudents from '../../../components/TableStudents'
+import classNames from 'classnames/bind'
 import request from '../../../api/axios'
+import TableStudents from '../../../components/TableStudents'
 import { TStudent } from '../../../types/students'
 import styles from './style.module.scss'
-import classNames from 'classnames/bind'
-import { useState } from 'react'
-import { Button } from 'antd'
 const cx = classNames.bind(styles)
 
 function Students() {
-  const [isTrue, setIsTrue] = useState<boolean>(false)
   const { data } = useQuery({
-    queryKey: ['Students', isTrue],
+    queryKey: ['Students'],
     queryFn: () => request.get('/students')
   })
 
   return (
-    <div className={cx('min-h-screen bg-[#F8F8F8] px-[30px]')}>
-      <Button onClick={() => setIsTrue((prev) => !prev)}>Get students</Button>
+    <div className={cx('studnets__wrapper')}>
       <TableStudents students={data?.data?.data as TStudent[]} />
     </div>
   )

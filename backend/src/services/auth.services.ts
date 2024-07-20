@@ -438,14 +438,16 @@ class UserService {
   async refreshToken({
     refresh_token,
     user_id,
-    verify
+    verify,
+    role
   }: {
     user_id: string
     refresh_token: string
     verify: UserVerifyStatus
+    role: Role
   }) {
     const [tokens] = await Promise.all([
-      this.signAccessAndRefreshToken({ user_id, verify }),
+      this.signAccessAndRefreshToken({ user_id, verify, role }),
       databaseService.refreshTokens.deleteOne({
         token: refresh_token
       })

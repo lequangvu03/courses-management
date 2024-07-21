@@ -72,6 +72,20 @@ export const addStudentValidator = validate(
         trim: true,
         isEmail: {
           errorMessage: 'Email is invalid'
+        },
+        custom: {
+          options: async (value, { req }) => {
+            const student = await databaseService.students.findOne({
+              email: value
+            })
+
+            if (student) {
+              throw new ServerError({
+                message: 'Email already exists',
+                status: HTTP_RESPONSE_STATUS_CODES.FORBIDDEN
+              })
+            }
+          }
         }
       },
       phone: {
@@ -79,12 +93,12 @@ export const addStudentValidator = validate(
           errorMessage: 'Phone number is required'
         }
       },
-      enrollNumber: {
+      enroll_number: {
         notEmpty: {
           errorMessage: 'Enroll Number is required'
         }
       },
-      dateOfAdmission: {
+      date_of_admission: {
         notEmpty: {
           errorMessage: 'Date of admission is required'
         }
@@ -139,6 +153,8 @@ export const editStudentValidator = validate(
                 status: HTTP_RESPONSE_STATUS_CODES.BAD_REQUEST
               })
             }
+
+            return true
           }
         }
       }

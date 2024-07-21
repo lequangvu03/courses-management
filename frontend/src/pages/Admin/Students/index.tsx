@@ -1,20 +1,31 @@
-import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames/bind'
-import request from '../../../api/axios'
 import TableStudents from '../../../components/TableStudents'
-import { TStudent } from '../../../types/students'
+
+import { useGetStudentListQuery } from '../../../hooks/data/students.data'
+import useQueryConfig from '../../../hooks/useQueryConfig'
 import styles from './style.module.scss'
 const cx = classNames.bind(styles)
 
 function Students() {
-  const { data } = useQuery({
-    queryKey: ['Students'],
-    queryFn: () => request.get('/students')
+  const { limit, page } = useQueryConfig()
+
+  const studentList = useGetStudentListQuery({
+    page: page,
+    limit: limit
   })
 
   return (
     <div className={cx('studnets__wrapper')}>
-      <TableStudents students={data?.data?.data as TStudent[]} />
+      <TableStudents
+        dataSource={
+          studentList?.data?.data?.data || {
+            page: page as number,
+            limit: limit as number,
+            total_pages: 0,
+            students: []
+          }
+        }
+      />
     </div>
   )
 }

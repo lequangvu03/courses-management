@@ -12,8 +12,19 @@ class AdminService {
     )
   }
 
-  async getStudents() {
-    return await databaseService.students.find({}).toArray()
+  async getStudents({ limit, page }: { limit: number; page: number }) {
+    const students = await databaseService.students
+      .find({})
+      .sort({ created_at: -1 })
+      .skip(limit * (page - 1))
+      .limit(limit)
+      .toArray()
+
+    const total = await databaseService.students.countDocuments()
+    return {
+      total,
+      students
+    }
   }
 
   async getStudentById(student_id: string) {

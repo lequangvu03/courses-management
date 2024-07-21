@@ -93,6 +93,7 @@ class Request {
     )
   }
   private handleRefreshToken() {
+    console.log(this.refreshToken)
     return this.instance
       .post<RefreshTokenResponse>('/auth/refresh-token', {
         refresh_token: this.refreshToken

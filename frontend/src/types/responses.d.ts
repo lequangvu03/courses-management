@@ -1,5 +1,5 @@
 import { OTPVerifyStatus } from '../constants/enums'
-import { IUser } from './types'
+import { IStudent, IUser } from './types'
 
 export interface SuccessResponse<TData> {
   message: string
@@ -27,4 +27,11 @@ export type RequestChangePasswordResponse = SuccessResponse<{
   status: OTPVerifyStatus
   expires_at: number
   created_at: number
+}>
+
+export type GetStudentListResponse = SuccessResponse<{
+  limit: number
+  page: number
+  total_pages: number
+  students: IStudent[]
 }>

@@ -50,8 +50,8 @@ export interface StudentReqBody {
   name: string
   email: string
   phone: string
-  enrollNumber: string
-  dateOfAdmission: string
+  enroll_number: string
+  date_of_admission: number
 }
 
 export interface EditStudentReqBody extends Partial<StudentReqBody> {}

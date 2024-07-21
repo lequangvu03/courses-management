@@ -1,8 +1,9 @@
-import { useLocation } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import { IQueryParams } from '../types/types'
 
-function useQueryParams() {
-  const location = useLocation()
-  return { location, params: new URLSearchParams(location.search) }
+function useQueryParams(): IQueryParams {
+  const [searchParams] = useSearchParams()
+  return Object.fromEntries([...searchParams])
 }
 
 export default useQueryParams

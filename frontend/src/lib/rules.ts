@@ -1,6 +1,9 @@
+import { IRegisterFormData, IStudentUpsertFormData } from './../types/types.d'
 import { Rule } from 'antd/es/form'
 
-const rules: Record<'email' | 'password' | 'confirm_password', Rule[]> = {
+type Keys = keyof IStudentUpsertFormData | keyof IRegisterFormData
+
+const rules: Record<Keys, Rule[]> = {
   email: [
     {
       required: true,
@@ -42,6 +45,45 @@ const rules: Record<'email' | 'password' | 'confirm_password', Rule[]> = {
         return Promise.reject(new Error('Confirm password does not match'))
       }
     })
+  ],
+  avatar: [
+    {
+      required: true,
+      whitespace: true,
+      message: 'Avatar is required'
+    }
+  ],
+  name: [
+    {
+      required: true,
+      whitespace: true,
+      message: 'Name is required'
+    }
+  ],
+  phone: [
+    {
+      required: true,
+      whitespace: true,
+      message: 'Phone number is required'
+    },
+    {
+      pattern: /^0[3|5|7|8|9]+[0-9]{8}$/,
+      message: 'Phone number is invalid'
+    }
+  ],
+  date_of_admission: [
+    {
+      required: true,
+      whitespace: true,
+      message: 'Date of admission is required'
+    }
+  ],
+  enroll_number: [
+    {
+      required: true,
+      whitespace: true,
+      message: 'Enroll number is required'
+    }
   ]
 }
 

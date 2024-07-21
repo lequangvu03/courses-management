@@ -94,3 +94,13 @@ export const removeAuthFromCookie = () => {
 export const isAdminRoute = (pathname: string) => {
   return pathname.includes('admin')
 }
+
+export const formatTime = (epochTime: number) => {
+  const date = new Date(epochTime * 1000) // Chuyển epoch time thành milliseconds và tạo đối tượng Date
+
+  return new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(date)
+}

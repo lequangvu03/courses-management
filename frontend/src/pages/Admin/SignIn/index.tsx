@@ -11,7 +11,6 @@ import { Role } from '../../../constants/enums'
 import { useLoginMutation } from '../../../hooks/data/auth.data'
 import useAuth from '../../../hooks/useAuth'
 import useAdminRoute from '../../../hooks/useDetectRoute'
-import useQueryParams from '../../../hooks/useQueryParams'
 import { handlerError } from '../../../lib/handlers'
 import rules from '../../../lib/rules'
 import { getRememberMeFromCookie, setRememberMeToCookie } from '../../../lib/utils'
@@ -23,7 +22,6 @@ const cx = classNames.bind(styles)
 function SignIn() {
   const navigate = useNavigate()
   const { setIsAuthenticated } = useAuth()
-  const { params } = useQueryParams()
   const { isAdmin } = useAdminRoute()
   const [rememberMe, setRememberMe] = useState<boolean>(getRememberMeFromCookie())
   const [form] = Form.useForm<ILoginFormData & { remember_me: boolean }>()
@@ -77,7 +75,6 @@ function SignIn() {
               name='email'
               label='Email'
               placeholder='Enter your email'
-              initialValue={params.get('email')}
               rules={rules.email}
             />
 

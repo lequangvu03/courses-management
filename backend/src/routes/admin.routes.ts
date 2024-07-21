@@ -13,7 +13,7 @@ import {
   editStudentValidator,
   getStudentByIdValidator
 } from '~/middlewares/admin.middlewares'
-import { filterMiddleware } from '~/middlewares/common.middlewares'
+import { filterMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import { EditStudentReqBody } from '~/types/requests/auth.requests'
 import { wrapRequestHandler } from '~/utils/handlers'
 
@@ -25,7 +25,7 @@ const adminRouter = Router()
  * headers: { Authorization: Bearer <access_token> }
  */
 
-adminRouter.get('/students', adminValidator, wrapRequestHandler(getStudentsController))
+adminRouter.get('/students', adminValidator, paginationValidator, wrapRequestHandler(getStudentsController))
 
 /**
  * path: /students/:id
@@ -53,7 +53,7 @@ adminRouter.get('/student/:id', adminValidator, getStudentByIdValidator, wrapReq
 adminRouter.post('/students/add', adminValidator, addStudentValidator, wrapRequestHandler(addStudentController))
 
 /**
- * path: /students/edit/:id
+ * path: /student/edit/:id
  * method: POST
  * headers: { Authorization: Bearer <access_token> }
  * body: { 
@@ -71,7 +71,7 @@ adminRouter.patch(
   '/student/edit/:id',
   adminValidator,
   editStudentValidator,
-  filterMiddleware<EditStudentReqBody>(['avatar', 'dateOfAdmission', 'enrollNumber', 'name', 'email', 'phone']),
+  filterMiddleware<EditStudentReqBody>(['avatar', 'date_of_admission', 'enroll_number', 'name', 'email', 'phone']),
   wrapRequestHandler(editStudentController)
 )
 

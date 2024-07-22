@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return (initialState.isAuthenticated && isAdmin) || (initialState.isAuthenticated && isUser)
   })
 
-  console.log(isAuthenticated)
   const [profile, setProfile] = useState<IUser | null>(initialState.profile)
 
   const reset = () => {

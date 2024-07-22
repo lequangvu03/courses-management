@@ -18,6 +18,7 @@ export const useGetStudentListQuery = ({
         limit
       }),
     enabled,
+    staleTime: 5 * 1000,
     placeholderData: keepPreviousData
   })
 }

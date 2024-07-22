@@ -6,7 +6,6 @@
   right: 0;
   top: 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   height: 100%;
   max-height: 60px;
@@ -21,11 +20,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-}
-
-.back-icon {
-  display: flex;
-  align-items: center;
 }
 
 .header__search-wrapper {
@@ -72,4 +66,16 @@
 .table__wrapper {
   max-width: 100%;
   overflow: auto;
+}
+.hamburger__wrapper {
+  display: block;
+}
+.button__hamburger {
+  display: none;
+}
+
+@media screen and (max-width: 1024px) {
+  .button__hamburger {
+    display: flex;
+  }
 }

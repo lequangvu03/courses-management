@@ -39,6 +39,7 @@
   text-transform: uppercase;
   color: $light;
   text-align: center;
+  white-space: nowrap;
 }
 
 .table__actions {
@@ -61,11 +62,14 @@
 .table__wrapper {
   overflow: auto;
   max-height: 650px;
-
+  min-height: 650px;
+  height: 650px;
+  width: calc(100% - 2 * 30px);
+  margin-left: auto;
+  margin-right: auto;
   table {
     table-layout: auto;
   }
-  // padding: 0 30px;
 }
 
 .pagination {
@@ -92,25 +96,14 @@
   padding: 0 30px;
 }
 
-@media (min-width: 1025px) {
+@media (max-width: 1024px) {
   .table__wrapper {
-    max-width: calc(100vw - 2 * 30px - 270px);
+    max-width: calc(100vw - 2 * 30px);
     margin-left: 30px;
   }
 
   .table__students {
     min-width: 1024px;
     width: 100%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .table__wrapper {
-    max-width: calc(100vw - 2 * 30px - 70px);
-    margin-left: 30px;
-  }
-
-  .table__students {
-    width: 1024px;
   }
 }

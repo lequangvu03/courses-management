@@ -4,7 +4,7 @@ import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import icons from '../../assets/icons'
 import { privateAdminRoutes } from '../../config/admin.routes'
 import styles from './style.module.scss'
-import { IQueryParams, IStudent } from '../../types/types'
+import { IStudent } from '../../types/types'
 import { useDeleteStudentMutation } from '../../hooks/data/students.data'
 import useQueryParams from '../../hooks/useQueryParams'
 
@@ -17,12 +17,12 @@ type TableStudentsProps = {
     total_pages: number
     students: IStudent[]
   }
+  loading?: boolean
 }
 
-function TableStudents({ dataSource }: TableStudentsProps) {
+function TableStudents({ dataSource, loading }: TableStudentsProps) {
   const params = useQueryParams()
   const navigate = useNavigate()
-  const { page }: IQueryParams = useQueryParams()
   const deleteStudentMutation = useDeleteStudentMutation()
   const columns: TableProps<IStudent>['columns'] = [
     {
@@ -102,7 +102,8 @@ function TableStudents({ dataSource }: TableStudentsProps) {
       search: createSearchParams({
         ...params,
         page: String(page)
-      }).toString()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any).toString()
     })
   }
 
@@ -123,6 +124,7 @@ function TableStudents({ dataSource }: TableStudentsProps) {
       </div>
       <div className={cx('table__wrapper')}>
         <Table
+          loading={loading}
           className={cx('table__students')}
           dataSource={dataSource.students}
           columns={columns}
@@ -135,7 +137,7 @@ function TableStudents({ dataSource }: TableStudentsProps) {
         <Pagination
           onChange={onPaginationChange}
           className={cx('pagination')}
-          current={Number(page) || 1}
+          current={params.page}
           pageSize={dataSource.limit}
           total={dataSource.total_pages * dataSource.limit}
         />

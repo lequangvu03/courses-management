@@ -1,0 +1,34 @@
+{
+  "welcome": "Welcome you to LOUIS",
+  "nav_links": {
+    "Home": "Home",
+    "Course": "Course",
+    "Students": "Students",
+    "Payment": "Payment",
+    "Report": "Report",
+    "Settings": "Settings"
+  },
+  "buttons": {
+    "add_student": "Add new student",
+    "logout": "Logout"
+  },
+  "inputs": {
+    "search": {
+      "placeholder": "Search..."
+    },
+    "message": {}
+  },
+  "stats": {
+    "Students": "Students",
+    "Course": "Course",
+    "Payments": "Payments",
+    "Users": "Users"
+  },
+  "titles": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "enroll_number": "Enroll Number",
+    "date_of_admission": "Date of admission"
+  }
+}

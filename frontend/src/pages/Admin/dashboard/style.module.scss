@@ -15,5 +15,8 @@
   $color: nth($colors, $i);
   .card-#{$i} {
     background: $color;
+    @if $i == 4 {
+      color: $light;
+    }
   }
 }

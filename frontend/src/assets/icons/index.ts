@@ -16,7 +16,9 @@ const icons = {
   pen: require('./pen.svg'),
   trash: require('./trash.svg'),
   sort: require('./sort.svg'),
-  eye: require('./eye.svg')
+  eye: require('./eye.svg'),
+  viFlag: require('./vietnam.svg'),
+  enFlag: require('./ukflag.svg')
 }
 
 export default icons

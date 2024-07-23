@@ -1,0 +1,36 @@
+@import '../../styles/variables';
+
+.flag__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.switcher__wrapper {
+  &:global(.ant-btn) {
+    padding: 0;
+    overflow: hidden;
+    display: block;
+    height: 36px;
+    width: 36px;
+    border-radius: 100% !important;
+  }
+}
+
+.dropdown__item :global(.ant-dropdown-menu-item) {
+  border: none;
+  width: 100%;
+  min-width: 120px !important;
+  padding: 0 !important;
+}
+.lang-label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px 16px !important;
+  border-radius: 4px;
+  &.active {
+    background-color: $primary;
+    color: $light;
+  }
+}

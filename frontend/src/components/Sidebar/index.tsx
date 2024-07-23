@@ -1,4 +1,3 @@
-import { Flex } from 'antd'
 import classNames from 'classnames/bind'
 import { NavLink, useNavigate } from 'react-router-dom'
 import icons from '../../assets/icons'
@@ -9,10 +8,10 @@ import { useLogoutMutation } from '../../hooks/data/auth.data'
 import useAuth from '../../hooks/useAuth'
 import HeaderBrandTitle from '../HeaderBrandTitle'
 import styles from './style.module.scss'
-import Hamburger from '../Hamburger'
 import useToggleMenu from '../../hooks/useToggleMenu'
 import { useEffect } from 'react'
 import useBoolean from '../../hooks/useBoolean'
+import { useTranslation } from 'react-i18next'
 
 const cx = classNames.bind(styles)
 
@@ -21,6 +20,7 @@ type SidebarProps = {
 }
 
 function Sidebar({ className }: SidebarProps) {
+  const { t } = useTranslation()
   const logoutMutation = useLogoutMutation()
   const { setIsAuthenticated } = useAuth()
   const navigation = useNavigate()
@@ -88,14 +88,14 @@ function Sidebar({ className }: SidebarProps) {
                 <div className={cx('nav__icon-wrapper')}>
                   <img src={icon} className={cx('nav__icon')} />
                 </div>
-                <span className={cx('nav__label')}>{label}</span>
+                <span className={cx('nav__label')}>{t(`nav_links.${label}`)}</span>
               </NavLink>
             </li>
           ))}
         </ul>
         <div>
           <button className={cx('button__logout')} onClick={handleLogout}>
-            <span className={cx('button__label')}>Logout</span>
+            <span className={cx('button__label')}>{t('buttons.logout')}</span>
             <img src={icons.logout} />
           </button>
         </div>

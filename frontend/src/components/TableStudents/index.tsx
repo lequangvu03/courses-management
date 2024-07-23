@@ -7,6 +7,7 @@ import styles from './style.module.scss'
 import { IStudent } from '../../types/types'
 import { useDeleteStudentMutation } from '../../hooks/data/students.data'
 import useQueryParams from '../../hooks/useQueryParams'
+import { useTranslation } from 'react-i18next'
 
 const cx = classNames.bind(styles)
 
@@ -15,15 +16,17 @@ type TableStudentsProps = {
     limit: number
     page: number
     total_pages: number
-    students: IStudent[]
+    students: (IStudent & { key: string })[]
   }
   loading?: boolean
 }
 
 function TableStudents({ dataSource, loading }: TableStudentsProps) {
+  const { t } = useTranslation()
   const params = useQueryParams()
   const navigate = useNavigate()
   const deleteStudentMutation = useDeleteStudentMutation()
+
   const columns: TableProps<IStudent>['columns'] = [
     {
       title: '',
@@ -35,31 +38,31 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
       )
     },
     {
-      title: 'Name',
+      title: t('titles.name'),
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Email',
+      title: t('titles.email'),
       dataIndex: 'email',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Phone',
+      title: t('titles.phone'),
       dataIndex: 'phone',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Enroll Number',
+      title: t('titles.enroll_number'),
       dataIndex: 'enroll_number',
       sorter: (a, b) => a.name.localeCompare(b.name),
       sortDirections: ['ascend', 'descend']
     },
     {
-      title: 'Date of admission',
+      title: t('titles.date_of_admission'),
       dataIndex: 'date_of_admission'
     },
     {
@@ -117,7 +120,7 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
               <img src={icons.sort} alt='icon' />
             </button>
             <Link to={privateAdminRoutes.addStudent} className={cx('button__add')}>
-              ADD NEW STUDENT
+              {t('buttons.add_student')}
             </Link>
           </div>
         </header>

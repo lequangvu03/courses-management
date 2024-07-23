@@ -5,9 +5,10 @@ import { useGetStudentListQuery } from '../../../hooks/data/students.data'
 import useQueryConfig from '../../../hooks/useQueryConfig'
 import styles from './style.module.scss'
 import { createSearchParams, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { privateAdminRoutes } from '../../../config/admin.routes'
 import { omit } from 'lodash'
+import { IStudent } from '../../../types/types'
 const cx = classNames.bind(styles)
 
 function Students() {
@@ -19,8 +20,22 @@ function Students() {
     limit: limit
   })
 
+  const dataSource = useMemo(() => {
+    if (studentList.isSuccess && studentList.data.data.data.students.length > 0) {
+      const students = studentList?.data?.data?.data.students
+      return students?.map(
+        (student) =>
+          ({
+            ...student,
+            key: student._id
+          }) as IStudent & { key: string }
+      )
+    }
+    return []
+  }, [studentList])
+
   useEffect(() => {
-    if (studentList.data?.data.data.students.length === 0 && (page as number) > 1) {
+    if (dataSource.length === 0 && (page as number) > 1) {
       navigate({
         pathname: privateAdminRoutes.students,
         search: createSearchParams(
@@ -34,11 +49,19 @@ function Students() {
   }, [studentList.data])
 
   return (
-    <div className={cx('studnets__wrapper')}>
+    <div className={cx('students__wrapper')}>
       <TableStudents
         loading={studentList.isPending}
         dataSource={
-          studentList?.data?.data?.data || {
+          {
+            ...(studentList?.data?.data?.data as {
+              limit: number
+              page: number
+              total_pages: number
+              students: IStudent[]
+            }),
+            students: dataSource
+          } || {
             page: page as number,
             limit: limit as number,
             total_pages: 0,

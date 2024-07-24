@@ -6,6 +6,7 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import path from 'path'
 import envs from './constants/env-variables'
 import adminRouter from './routes/admin.routes'
+import cookieParser from 'cookie-parser'
 const PORT = envs.port || 4000
 const app = express()
 
@@ -17,8 +18,14 @@ app.set('views', path.join(__dirname, 'views'))
 databaseService.connect()
 
 app.use(json())
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:3080',
+    credentials: true
+  })
+)
 
+app.use(cookieParser())
 // Routes
 app.use('/api/auth', authRouter)
 app.use('/api', adminRouter)

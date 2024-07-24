@@ -1,7 +1,7 @@
 import { Flex } from 'antd'
 import classNames from 'classnames/bind'
+import useSidebarStore from '../../stores/toggle-menu.store'
 import styles from './style.module.scss'
-import useToggleMenu from '../../hooks/useToggleMenu'
 
 const cx = classNames.bind(styles)
 
@@ -10,7 +10,7 @@ type HamburgerProps = {
 }
 
 function Hamburger({ className }: HamburgerProps) {
-  const { open, toggle } = useToggleMenu()
+  const { open, toggle } = useSidebarStore()
   return (
     <Flex
       vertical

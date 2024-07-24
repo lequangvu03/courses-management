@@ -1,4 +1,4 @@
-import { checkSchema, ParamSchema } from 'express-validator'
+import { checkSchema, cookie, ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize } from 'lodash'
 import envs from '~/constants/env-variables'
@@ -144,11 +144,9 @@ export const registerValidator = validate(
 export const accessTokenValidator = validate(
   checkSchema(
     {
-      Authorization: {
+      access_token: {
         custom: {
-          options: async (value, { req }) => {
-            const access_token = (value || '').split('Bearer ')[1]
-
+          options: async (access_token, { req }) => {
             try {
               const decoded_access_token = await verifyToken({
                 privateKey: envs.accessTokenPrivateKey,
@@ -170,7 +168,7 @@ export const accessTokenValidator = validate(
         }
       }
     },
-    ['headers']
+    ['cookies']
   )
 )
 
@@ -195,8 +193,6 @@ export const refreshTokenValidator = validate(
                 }),
                 databaseService.refreshTokens.findOne({ token: value })
               ])
-              console.log(decoded_refresh_token)
-              console.log(refresh_token)
 
               if (!refresh_token) {
                 throw new ServerError({
@@ -219,7 +215,7 @@ export const refreshTokenValidator = validate(
         }
       }
     },
-    ['body']
+    ['cookies']
   )
 )
 

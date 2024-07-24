@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  authController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -14,7 +15,8 @@ import {
   registerValidator,
   requestChangePasswordValidator,
   resetPasswordValidator,
-  verifyOTPValidator
+  verifyOTPValidator,
+  accessTokenValidator
 } from '~/middlewares/auth.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 import { registerController, verifyEmailController } from '~/controllers/auth.controllers'
@@ -30,9 +32,16 @@ const authRouter = Router()
 authRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
 
 /**
+ * path: /profile
+ * method: GET
+ * cookie: { access_token: string }
+ */
+authRouter.get('/profile', accessTokenValidator, wrapRequestHandler(authController))
+
+/**
  * path: /auth/refresh-token
  * method: GET
- * body: {refresh_token: string}
+ * cookie: { refresh_token: string }
  */
 
 authRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
@@ -56,7 +65,7 @@ authRouter.post('/register', registerValidator, wrapRequestHandler(registerContr
 /**
  * path: /auth/verify-email?token=<email_verified_token>
  * method: GET
- * query: {token: string}
+ * query: { token: string }
  */
 
 authRouter.get('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController))
@@ -64,7 +73,7 @@ authRouter.get('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(ve
 /**
  * path: /auth/request-reset-password
  * method: POST
- * body: { email: string, role?: Role}
+ * body: { email: string, role?: Role }
  */
 
 authRouter.post(

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from 'classnames/bind'
 import TableStudents from '../../../components/TableStudents'
 
@@ -15,10 +16,7 @@ function Students() {
   const params = useQueryConfig()
   const { limit, page } = params
   const navigate = useNavigate()
-  const studentList = useGetStudentListQuery({
-    page: page,
-    limit: limit
-  })
+  const studentList = useGetStudentListQuery({ params })
 
   const dataSource = useMemo(() => {
     if (studentList.isSuccess && studentList.data.data.data.students.length > 0) {

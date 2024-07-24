@@ -64,7 +64,7 @@
   max-height: 650px;
   min-height: 650px;
   height: 650px;
-  width: calc(100% - 2 * 30px);
+  max-width: calc(100vw - 2 * 30px - 270px);
   margin-left: auto;
   margin-right: auto;
   table {

@@ -1,22 +1,11 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import studentsApi from '../../api/students.api'
+import { IQueryParams } from '../../types/types'
 
-export const useGetStudentListQuery = ({
-  enabled = true,
-  page,
-  limit
-}: {
-  page?: number
-  limit?: number
-  enabled?: boolean
-}) => {
+export const useGetStudentListQuery = ({ enabled = true, params }: { params: IQueryParams; enabled?: boolean }) => {
   return useQuery({
-    queryKey: ['students', page, limit],
-    queryFn: () =>
-      studentsApi.getStudentList({
-        page,
-        limit
-      }),
+    queryKey: ['students', params],
+    queryFn: () => studentsApi.getStudentList(params),
     enabled,
     staleTime: 5 * 1000,
     placeholderData: keepPreviousData

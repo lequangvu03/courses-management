@@ -2,8 +2,9 @@ import axios, { AxiosError } from 'axios'
 import Cookies from 'js-cookie'
 import HTTP_RESPONSE_STATUS_CODES from '../constants/http-status-codes'
 import { ErrorResponse } from '../types/responses'
-import { IUser } from '../types/types'
+
 import { Role } from '../constants/enums'
+import { decrypt, encrypt } from './crypto'
 
 export const formatNumber = (number: number) => new Intl.NumberFormat().format(number)
 
@@ -35,60 +36,40 @@ export const isAxiosExpiredAccessTokenError = <ExpiredAccessTokenError>(
   >(error)
 }
 
-export const setAccessTokenToLocalCookie = (access_token: string) => {
-  Cookies.set('access_token', access_token, {
-    expires: 1 / 1440
+export const getRememberMeFromCookie = (role: Role = Role.User) => {
+  return Cookies.get(role === Role.Admin ? 'admin_remember_me' : 'remember_me')
+}
+
+export const getEmailFromCookie = (role: Role = Role.User) => {
+  return decrypt(Cookies.get(role === Role.Admin ? 'admin_email' : 'email') || '')
+}
+
+export const getPasswordFromCookie = (role: Role = Role.User) => {
+  return decrypt(Cookies.get(role === Role.Admin ? 'admin_password' : 'password') || '')
+}
+
+export const setRememberMeToCookie = (value: boolean, role: Role = Role.User) => {
+  Cookies.set(role === Role.Admin ? 'admin_remember_me' : 'remember_me', String(value), {
+    expires: 365
   })
 }
 
-export const getAccessTokenFromCookie = () => {
-  return Cookies.get('access_token') || ''
-}
-
-export const setRefreshTokenToCookie = (refresh_token: string) => {
-  Cookies.set('refresh_token', refresh_token, {
-    expires: 7
+export const setEmailFromCookie = (email: string, role: Role = Role.User) => {
+  Cookies.set(role === Role.Admin ? 'admin_email' : 'email', encrypt(email), {
+    expires: 365
   })
 }
 
-export const getRefreshTokenFromCookie = () => {
-  return Cookies.get('refresh_token') || ''
-}
-export const setRoleToCookie = (role: Role) => {
-  Cookies.set('role', JSON.stringify(role), {
-    expires: 7
-  })
-}
-export const getRoleFromCookie = () => {
-  const role = Cookies.get('role')
-  return role ? +role : undefined
-}
-
-export const setProfileToCookie = (profile: IUser) => {
-  Cookies.set('profile', JSON.stringify(profile), {
-    expires: 7
+export const setPasswordFromCookie = (password: string, role: Role = Role.User) => {
+  Cookies.set(role === Role.Admin ? 'admin_password' : 'password', encrypt(password), {
+    expires: 365
   })
 }
 
-export const getProfileFromCookie = () => {
-  const profile = Cookies.get('profile')
-  return profile ? JSON.parse(profile) : null
-}
-
-export const setRememberMeToCookie = (value: boolean) => {
-  Cookies.set('remember_me', JSON.stringify(value))
-}
-
-export const getRememberMeFromCookie = () => {
-  const isRememerMe = Cookies.get('remember_me')
-  return isRememerMe ? JSON.parse(isRememerMe) : false
-}
-
-export const removeAuthFromCookie = () => {
-  Cookies.remove('access_token')
-  Cookies.remove('refresh_token')
-  Cookies.remove('profile')
-  Cookies.remove('role')
+export const removeRememberMeFromCookie = (role: Role = Role.User) => {
+  Cookies.remove(role === Role.Admin ? 'admin_email' : 'email')
+  Cookies.remove(role === Role.Admin ? 'admin_password' : 'password')
+  Cookies.remove(role === Role.Admin ? 'admin_remember_me' : 'remember_me')
 }
 
 export const isAdminRoute = (pathname: string) => {

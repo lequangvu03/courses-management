@@ -10,7 +10,6 @@ import { hashPassword } from '~/utils/crypto'
 import { sendEmail } from './mail.services'
 import { Address } from 'nodemailer/lib/mailer'
 import { generateEmailOTP } from '~/utils/random'
-import { omit } from 'lodash'
 import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'
 
 class UserService {
@@ -357,6 +356,11 @@ class UserService {
     return {
       message: 'Resend email verification token successfully'
     }
+  }
+  async getProfile(user_id: string) {
+    return await databaseService.users.findOne({
+      _id: new ObjectId(user_id)
+    })
   }
 
   async register(payload: RegisterReqBody) {

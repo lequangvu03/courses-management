@@ -1,63 +1,28 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
-import {
-  getAccessTokenFromCookie,
-  getRefreshTokenFromCookie,
-  isAxiosExpiredAccessTokenError,
-  isAxiosUnauthorizedError,
-  removeAuthFromCookie,
-  setAccessTokenToLocalCookie,
-  setProfileToCookie,
-  setRefreshTokenToCookie,
-  setRoleToCookie
-} from '../lib/utils'
-import { AuthResponse, RefreshTokenResponse } from '../types/responses'
+import { isAxiosExpiredAccessTokenError, isAxiosUnauthorizedError } from '../lib/utils'
+import { RefreshTokenResponse } from '../types/responses'
+import authApi from './auth.api'
 
 class Request {
   instance: AxiosInstance
-  private accessToken: string
-  private refreshToken: string
+
   private refreshTokenRequest: Promise<string | undefined> | null
 
   constructor() {
-    this.accessToken = getAccessTokenFromCookie()
-    this.refreshToken = getRefreshTokenFromCookie()
     this.refreshTokenRequest = null
     this.instance = axios.create({
       baseURL: import.meta.env.VITE_BASE_URL,
-      timeout: 5000
+      timeout: 5000,
+      withCredentials: true
     })
 
     this.instance.interceptors.request.use(
-      (config) => {
-        this.accessToken = getAccessTokenFromCookie()
-        this.refreshToken = getRefreshTokenFromCookie()
-        if (this.accessToken && config.headers) {
-          config.headers.Authorization = `Bearer ${this.accessToken}`
-        }
-        // Handle auth here
-        return config
-      },
+      (config) => config,
       (error) => Promise.reject(error)
     )
 
     this.instance.interceptors.response.use(
-      (response) => {
-        const { url } = response.config
-        console.log('URL: ', url)
-        if (url?.includes('/login')) {
-          const { data } = response.data as AuthResponse
-          const { access_token, refresh_token } = data
-          setAccessTokenToLocalCookie(access_token)
-          setRefreshTokenToCookie(refresh_token)
-          setProfileToCookie(data.user)
-          setRoleToCookie(data.user.role)
-        }
-
-        if (url === '/auth/logout') {
-          removeAuthFromCookie()
-        }
-        return response
-      },
+      (response) => response,
       (error: AxiosError) => {
         if (isAxiosUnauthorizedError(error)) {
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
@@ -87,28 +52,20 @@ class Request {
               })
           }
         }
-        // Handle logout here
+
         return Promise.reject(error)
       }
     )
   }
   private handleRefreshToken() {
-    console.log(this.refreshToken)
     return this.instance
-      .post<RefreshTokenResponse>('/auth/refresh-token', {
-        refresh_token: this.refreshToken
-      })
+      .post<RefreshTokenResponse>('/auth/refresh-token')
       .then((res) => {
-        const { access_token, refresh_token } = res.data.data
-        this.accessToken = access_token
-        setAccessTokenToLocalCookie(access_token)
-        setRefreshTokenToCookie(refresh_token)
-        return this.accessToken
+        console.log(res)
+        return undefined
       })
-      .catch((error) => {
-        removeAuthFromCookie()
-        this.accessToken = ''
-        this.refreshToken = ''
+      .catch(async (error) => {
+        await authApi.logout()
         throw error
       })
   }

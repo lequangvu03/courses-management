@@ -11,14 +11,9 @@ export interface ErrorResponse<TData> {
   data?: TData
 }
 
-export type RefreshTokenResponse = SuccessResponse<{
-  access_token: string
-  refresh_token: string
-}>
+export type RefreshTokenResponse = SuccessResponse<object>
 
 export type AuthResponse = SuccessResponse<{
-  refresh_token: string
-  access_token: string
   user: IUser
 }>
 

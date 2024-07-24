@@ -5,7 +5,6 @@ import { ServerError } from '~/models/Errors'
 import { ResponseObject } from '~/models/ResponseObject'
 import Student from '~/models/schemas/student.model'
 import adminService from '~/services/admin.services'
-import databaseService from '~/services/database.services'
 import { StudentReqBody, EditStudentReqBody } from '~/types/requests/auth.requests'
 
 export const addStudentController = async (req: Request<ParamsDictionary, any, StudentReqBody>, res: Response) => {

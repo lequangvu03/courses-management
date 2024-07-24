@@ -15,11 +15,9 @@ import validate from '~/utils/validate'
 export const adminValidator = validate(
   checkSchema(
     {
-      Authorization: {
+      access_token: {
         custom: {
-          options: async (value, { req }) => {
-            const access_token = (value || '').split('Bearer ')[1]
-
+          options: async (access_token, { req }) => {
             try {
               const decoded_access_token = await verifyToken({
                 privateKey: envs.accessTokenPrivateKey,
@@ -27,6 +25,7 @@ export const adminValidator = validate(
               })
 
               const { role } = decoded_access_token
+
               if (role !== Role.Admin) {
                 throw new ServerError({
                   message: 'Permission denied',
@@ -48,7 +47,7 @@ export const adminValidator = validate(
         }
       }
     },
-    ['headers']
+    ['cookies']
   )
 )
 

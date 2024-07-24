@@ -22,7 +22,7 @@ const adminRouter = Router()
 /**
  * path: /students
  * method: GET
- * headers: { Authorization: Bearer <access_token> }
+ * cookie: { access_token: string }
  */
 
 adminRouter.get('/students', adminValidator, paginationValidator, wrapRequestHandler(getStudentsController))
@@ -30,7 +30,7 @@ adminRouter.get('/students', adminValidator, paginationValidator, wrapRequestHan
 /**
  * path: /students/:id
  * method: GET
- * headers: { Authorization: Bearer <access_token> }
+ * cookie: { access_token: string }
  * params: { id: string }
  */
 
@@ -39,7 +39,7 @@ adminRouter.get('/student/:id', adminValidator, getStudentByIdValidator, wrapReq
 /**
  * path: /students/add
  * method: POST
- * headers: { Authorization: Bearer <access_token> }
+ * cookie: { access_token: string }
  * body: { 
            avatar: string
            name: string
@@ -55,7 +55,7 @@ adminRouter.post('/students/add', adminValidator, addStudentValidator, wrapReque
 /**
  * path: /student/edit/:id
  * method: POST
- * headers: { Authorization: Bearer <access_token> }
+ * cookie: { access_token: string }
  * body: { 
            _id: string
            avatar?: string
@@ -78,7 +78,7 @@ adminRouter.patch(
 /**
  * path: /student/:id
  * method: DELETE
- * headers: { Authorization: Bearer <access_token> }
+ * cookie: { access_token: string }
  */
 adminRouter.delete('/student/:id', adminValidator, deleteStudentValidator, wrapRequestHandler(deleteStudentController))
 

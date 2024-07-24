@@ -29,6 +29,7 @@ export interface IAddStudentBody extends Omit<IStudent, '_id' | 'updated_at' | '
 export interface ILoginFormData {
   email: string
   password: string
+  remember_me: boolean
 }
 export interface IRegisterFormData {
   email: string

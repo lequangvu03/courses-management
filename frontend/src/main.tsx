@@ -4,21 +4,29 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
-import { AuthProvider } from './contexts/app.context.tsx'
+// import { AuthProvider } from './contexts/app.context.tsx'
 import './i18n/index.ts'
 import './index.scss'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false
+    },
+    mutations: {}
+  }
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <App />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </AuthProvider>
+    {/* <AuthProvider> */}
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
+    {/* </AuthProvider> */}
   </React.StrictMode>
 )

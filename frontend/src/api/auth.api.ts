@@ -1,7 +1,6 @@
 import { Role } from '../constants/enums'
-import { getRefreshTokenFromCookie } from '../lib/utils'
 import { AuthResponse, RequestChangePasswordResponse, SuccessResponse } from '../types/responses'
-import { IResetPasswordFormData } from '../types/types'
+import { IResetPasswordFormData, IUser } from '../types/types'
 import request from './axios'
 
 const authApi = {
@@ -11,10 +10,11 @@ const authApi = {
   register: (args: { email: string; password: string; confirm_password: string; role?: Role }) => {
     return request.post<SuccessResponse<object>>('/auth/register', args)
   },
+  getProfile: () => {
+    return request.get<SuccessResponse<{ user: IUser }>>('/auth/profile')
+  },
   logout: () => {
-    return request.post('/auth/logout', {
-      refresh_token: getRefreshTokenFromCookie()
-    })
+    return request.post('/auth/logout')
   },
   requestChangePassword: (args: { email: string; role?: Role }) => {
     return request.post<RequestChangePasswordResponse>('/auth/request-reset-password', args)

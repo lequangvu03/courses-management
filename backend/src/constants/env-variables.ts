@@ -18,7 +18,8 @@ const envs = {
   refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
   emailVerifyTokenExpiresIn: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN as string,
   mailAuthUser: process.env.MAIL_AUTH_USER as string,
-  mailAuthPass: process.env.MAIL_AUTH_PASS as string
+  mailAuthPass: process.env.MAIL_AUTH_PASS as string,
+  isProduction: (process.env.NODE_ENV === 'production') as boolean
 }
 
 export default envs

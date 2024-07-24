@@ -1,9 +1,9 @@
 import { GetStudentListResponse, SuccessResponse } from '../types/responses'
-import { IStudent, IStudentUpsertFormData } from '../types/types'
+import { IQueryParams, IStudent, IStudentUpsertFormData } from '../types/types'
 import request from './axios'
 
 const studentsApi = {
-  getStudentList: ({ page, limit }: { page?: number; limit?: number }) => {
+  getStudentList: ({ page, limit }: IQueryParams) => {
     return request.get<GetStudentListResponse>('students', {
       params: {
         page: page || 1,

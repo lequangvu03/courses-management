@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import type { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 import HTTP_RESPONSE_STATUS_CODES from '~/constants/http-status-codes'
@@ -9,7 +9,6 @@ import databaseService from '~/services/database.services'
 import userService from '~/services/auth.services'
 import {
   LoginReqBody,
-  LogoutReqBody,
   RegisterReqBody,
   ResendEmailReqBody,
   ResetPasswordReqBody,
@@ -19,6 +18,8 @@ import {
 import { Role, UserVerifyStatus } from '~/constants/enums'
 import { omit } from 'lodash'
 import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'
+import envs from '~/constants/env-variables'
+import { setCookie } from '~/utils/cookie'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const { _id, verify, role } = req.user as User
@@ -31,19 +32,22 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
       })
     )
   }
-
   const { access_token, refresh_token } = await userService.login({
     user_id: (_id as ObjectId).toString(),
     verify,
     role
   })
 
+  setCookie(res, 'access_token', access_token, {
+    maxAge: 60 * 1000
+  })
+
+  setCookie(res, 'refresh_token', refresh_token)
+
   res.json({
     message: 'Login successfully',
 
     data: {
-      access_token,
-      refresh_token,
       user: { ...omit(req.user, ['password', 'email_verify_token']) }
     }
   })
@@ -90,19 +94,52 @@ export const verifyEmailController = async (req: Request, res: Response) => {
   })
 }
 
+export const authController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_access_token as TokenPayload
+  const user = await userService.getProfile(user_id)
+
+  if (!user) {
+    return next(
+      new ServerError({
+        message: 'User does not exist',
+        status: HTTP_RESPONSE_STATUS_CODES.NOT_FOUND
+      })
+    )
+  }
+
+  res.json(
+    new ResponseObject({
+      message: 'Get profile successfully',
+      data: {
+        user
+      }
+    })
+  )
+}
 export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, { refresh_token: string }>,
   res: Response
 ) => {
   const { user_id, verify, role } = req.decoded_refresh_token as TokenPayload
-
   const { refresh_token } = req.body
 
-  const result = await userService.refreshToken({ refresh_token, user_id, verify, role })
+  const { access_token: new_access_token, refresh_token: new_refresh_token } = await userService.refreshToken({
+    refresh_token,
+    user_id,
+    verify,
+    role
+  })
+
+  setCookie(res, 'access_token', new_access_token, {
+    maxAge: 60 * 1000
+  })
+
+  setCookie(res, 'refresh_token', new_refresh_token)
+
   return res.json(
     new ResponseObject({
       message: 'Refresh token successfully',
-      data: result
+      data: {}
     })
   )
 }
@@ -143,9 +180,13 @@ export const resendEmailVerifyTokenController = async (
   )
 }
 
-export const logoutController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
-  const { refresh_token } = req.body
+export const logoutController = async (req: Request, res: Response) => {
+  const { refresh_token } = req.cookies
   await userService.logout(refresh_token)
+
+  res.clearCookie('access_token')
+  res.clearCookie('refresh_token')
+
   res.json(
     new ResponseObject({
       message: 'Logout successfully',

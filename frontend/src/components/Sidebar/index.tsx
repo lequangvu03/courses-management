@@ -1,17 +1,18 @@
 import classNames from 'classnames/bind'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import icons from '../../assets/icons'
 import images from '../../assets/images'
-import { privateAdminRoutes } from '../../config/admin.routes'
+import { privateAdminRoutes, publicAdminRoutes } from '../../config/admin.routes'
 import navlinks from '../../constants/links'
 import { useLogoutMutation } from '../../hooks/data/auth.data'
-import useAuth from '../../hooks/useAuth'
+import useBoolean from '../../hooks/useBoolean'
+import useAuthStore from '../../stores/auth.store'
+import useSidebarStore from '../../stores/toggle-menu.store'
+import Hamburger from '../Hamburger'
 import HeaderBrandTitle from '../HeaderBrandTitle'
 import styles from './style.module.scss'
-import useToggleMenu from '../../hooks/useToggleMenu'
-import { useEffect } from 'react'
-import useBoolean from '../../hooks/useBoolean'
-import { useTranslation } from 'react-i18next'
 
 const cx = classNames.bind(styles)
 
@@ -22,9 +23,9 @@ type SidebarProps = {
 function Sidebar({ className }: SidebarProps) {
   const { t } = useTranslation()
   const logoutMutation = useLogoutMutation()
-  const { setIsAuthenticated } = useAuth()
+  const { setIsAuthenticated } = useAuthStore()
   const navigation = useNavigate()
-  const { open, setOpen } = useToggleMenu()
+  const { open, setOpen } = useSidebarStore()
   const { value: openOverlay, setValue: setOpenOverlay } = useBoolean(true)
 
   useEffect(() => {
@@ -46,7 +47,7 @@ function Sidebar({ className }: SidebarProps) {
   }, [])
 
   const handleLogout = () => {
-    navigation('/sign-in')
+    navigation(publicAdminRoutes.signin)
     logoutMutation.mutate()
     setIsAuthenticated(false)
   }
@@ -59,9 +60,7 @@ function Sidebar({ className }: SidebarProps) {
           open: open
         })}
       >
-        {/* <Flex className={cx('hamburger__wrapper')} align='end' justify='end'>
-          <Hamburger className={cx('button__hamburger')} />
-        </Flex> */}
+        <Hamburger className={cx('button__hamburger')} />
         <HeaderBrandTitle label='CRUD OPERATIONS' className={cx('sidebar__header--title')} />
         <div className={cx('sidebar__info')}>
           <div className={cx('info__avatar')}>

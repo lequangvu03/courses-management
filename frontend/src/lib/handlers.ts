@@ -18,6 +18,7 @@ export const handlerError = <TFormData>({ error, form }: { error: unknown; form?
       })
     }
   } else {
+    console.log(error)
     message.error((error && (error as any)?.response?.data?.message) || 'Server error')
   }
 }

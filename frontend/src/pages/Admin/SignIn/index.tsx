@@ -1,51 +1,91 @@
-import { Button, Checkbox, Flex, Form, message } from 'antd'
-import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { Button, Checkbox, Form, message } from 'antd'
 import classNames from 'classnames/bind'
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import HeaderBrandTitle from '../../../components/HeaderBrandTitle'
 import Input from '../../../components/Input'
 import { privateAdminRoutes, publicAdminRoutes } from '../../../config/admin.routes'
 import { privateUserRoutes, publicUserRoutes } from '../../../config/user.routes'
-import { Role } from '../../../constants/enums'
+import { Role, UserVerifyStatus } from '../../../constants/enums'
 import { useLoginMutation } from '../../../hooks/data/auth.data'
-import useAuth from '../../../hooks/useAuth'
 import useAdminRoute from '../../../hooks/useDetectRoute'
 import { handlerError } from '../../../lib/handlers'
 import rules from '../../../lib/rules'
-import { getRememberMeFromCookie, setRememberMeToCookie } from '../../../lib/utils'
 import { ILoginFormData } from '../../../types/types'
 import styles from './style.module.scss'
+
+import { useEffect } from 'react'
+import {
+  getEmailFromCookie,
+  getPasswordFromCookie,
+  getRememberMeFromCookie,
+  removeRememberMeFromCookie,
+  setEmailFromCookie,
+  setPasswordFromCookie,
+  setRememberMeToCookie
+} from '../../../lib/utils'
+import useAuthStore from '../../../stores/auth.store'
 
 const cx = classNames.bind(styles)
 
 function SignIn() {
   const navigate = useNavigate()
-  const { setIsAuthenticated } = useAuth()
+  const { setIsAuthenticated } = useAuthStore()
   const { isAdmin } = useAdminRoute()
-  const [rememberMe, setRememberMe] = useState<boolean>(getRememberMeFromCookie())
-  const [form] = Form.useForm<ILoginFormData & { remember_me: boolean }>()
-
+  const [form] = Form.useForm<ILoginFormData>()
   const loginUserMutation = useLoginMutation()
 
-  const handleLogin = async (value: ILoginFormData & { remember_me: boolean }) => {
+  useEffect(() => {
+    const role = isAdmin ? Role.Admin : Role.User
+    const isRemembered = Boolean(getRememberMeFromCookie(role))
+
+    if (isRemembered) {
+      const email = getEmailFromCookie(role)
+      const password = getPasswordFromCookie(role)
+      form.setFieldsValue({
+        email,
+        password,
+        remember_me: isRemembered
+      })
+    }
+  }, [])
+
+  const handleLogin = async (value: ILoginFormData) => {
     const { email, password, remember_me } = value
-    console.log('Remember me', remember_me)
+    const isRememberMe = Boolean(remember_me)
+
     try {
       if (isAdmin) {
-        const response = await loginUserMutation.mutateAsync({ email, password, role: Role.Admin })
-        setIsAuthenticated(true)
+        const response = await loginUserMutation.mutateAsync({
+          email,
+          password,
+          role: Role.Admin
+        })
+
+        const { user } = response.data.data
+        setIsAuthenticated(user.verify === UserVerifyStatus.Verify)
         navigate(privateAdminRoutes.dashboard, {
           replace: true
         })
+
         message.success(response.data.message)
       } else {
         const response = await loginUserMutation.mutateAsync({ email, password })
-        setIsAuthenticated(true)
+        const { user } = response.data.data
+        setIsAuthenticated(user.verify === UserVerifyStatus.Verify)
         navigate(privateUserRoutes.home, {
           replace: true
         })
         message.success(response.data.message)
+      }
+
+      const role = isAdmin ? Role.Admin : Role.User
+
+      if (isRememberMe) {
+        setRememberMeToCookie(isRememberMe, role)
+        setEmailFromCookie(email, role)
+        setPasswordFromCookie(password, role)
+      } else {
+        removeRememberMeFromCookie(role)
       }
     } catch (error: unknown) {
       handlerError({
@@ -53,11 +93,6 @@ function SignIn() {
         form
       })
     }
-  }
-  const handleRememberMe = (e: CheckboxChangeEvent) => {
-    const isRememberMe = e.target.checked
-    setRememberMeToCookie(isRememberMe)
-    setRememberMe(isRememberMe)
   }
 
   return (
@@ -70,27 +105,17 @@ function SignIn() {
             <div className={cx('form__desc')}>Enter your credentials to access your account</div>
           </header>
           <Form form={form} className={cx('form')} layout='vertical' requiredMark={false} onFinish={handleLogin}>
-            <Input
-              autoComplete={rememberMe ? 'on' : 'off'}
-              name='email'
-              label='Email'
-              placeholder='Enter your email'
-              rules={rules.email}
-            />
+            <Input name='email' label='Email' placeholder='Enter your email' rules={rules.email} />
 
             <Input
-              autoComplete={rememberMe ? 'on' : 'off'}
               type='password'
               label='Password'
               name='password'
               placeholder='Enter your password'
               rules={rules.password}
             />
-            <Form.Item name='remember_me'>
-              <Flex gap={8} align='center'>
-                <Checkbox id='remember-me' checked={rememberMe} onChange={handleRememberMe} />
-                <label htmlFor='remember-me'>Remember me</label>
-              </Flex>
+            <Form.Item layout='horizontal' name='remember_me' valuePropName='checked'>
+              <Checkbox id='remember-me'>Remember me</Checkbox>
             </Form.Item>
 
             <Button

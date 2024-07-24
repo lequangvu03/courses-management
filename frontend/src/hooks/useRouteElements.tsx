@@ -18,6 +18,7 @@ import MyCourses from '../pages/myCourses'
 import SignUp from '../pages/signup'
 import ProtectedRoute from '../components/ProtectedRoute'
 import RejectedRoute from '../components/RejectedRoute'
+import NotFound from '../components/NotFound'
 
 function useRouteElements() {
   return useRoutes([
@@ -167,6 +168,10 @@ function useRouteElements() {
           <ResetPassword />
         </AuthLayout>
       )
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
 }

@@ -51,37 +51,25 @@ function SignIn() {
 
   const handleLogin = async (value: ILoginFormData) => {
     const { email, password, remember_me } = value
-    const isRememberMe = Boolean(remember_me)
+    const role = isAdmin ? Role.Admin : Role.User
 
     try {
-      if (isAdmin) {
-        const response = await loginUserMutation.mutateAsync({
-          email,
-          password,
-          role: Role.Admin
-        })
+      const response = await loginUserMutation.mutateAsync({
+        email,
+        password,
+        role: role
+      })
 
-        const { user } = response.data.data
-        setIsAuthenticated(user.verify === UserVerifyStatus.Verify)
-        navigate(privateAdminRoutes.dashboard, {
-          replace: true
-        })
+      const { user } = response.data.data
+      setIsAuthenticated(user.verify === UserVerifyStatus.Verify)
+      const redirectPath = user.role === Role.Admin ? privateAdminRoutes.dashboard : privateUserRoutes.home
+      navigate(redirectPath, {
+        replace: true
+      })
+      message.success(response.data.message)
 
-        message.success(response.data.message)
-      } else {
-        const response = await loginUserMutation.mutateAsync({ email, password })
-        const { user } = response.data.data
-        setIsAuthenticated(user.verify === UserVerifyStatus.Verify)
-        navigate(privateUserRoutes.home, {
-          replace: true
-        })
-        message.success(response.data.message)
-      }
-
-      const role = isAdmin ? Role.Admin : Role.User
-
-      if (isRememberMe) {
-        setRememberMeToCookie(isRememberMe, role)
+      if (remember_me) {
+        setRememberMeToCookie(remember_me, role)
         setEmailFromCookie(email, role)
         setPasswordFromCookie(password, role)
       } else {

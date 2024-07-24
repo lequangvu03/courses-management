@@ -2,14 +2,14 @@
 import classNames from 'classnames/bind'
 import TableStudents from '../../../components/TableStudents'
 
+import { omit } from 'lodash'
+import { useEffect, useMemo } from 'react'
+import { createSearchParams, useNavigate } from 'react-router-dom'
+import { privateAdminRoutes } from '../../../config/admin.routes'
 import { useGetStudentListQuery } from '../../../hooks/data/students.data'
 import useQueryConfig from '../../../hooks/useQueryConfig'
-import styles from './style.module.scss'
-import { createSearchParams, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo } from 'react'
-import { privateAdminRoutes } from '../../../config/admin.routes'
-import { omit } from 'lodash'
 import { IStudent } from '../../../types/types'
+import styles from './style.module.scss'
 const cx = classNames.bind(styles)
 
 function Students() {

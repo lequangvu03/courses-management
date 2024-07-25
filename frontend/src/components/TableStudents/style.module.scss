@@ -96,6 +96,9 @@
   padding: 0 30px;
 }
 
+:global(.ant-table-row) {
+  background: $light;
+}
 @media (max-width: 1024px) {
   .table__wrapper {
     max-width: calc(100vw - 2 * 30px);

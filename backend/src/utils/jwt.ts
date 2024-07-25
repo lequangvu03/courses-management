@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
 import { ExpiredTokenError } from '~/models/ResponseObject'
-import { TokenPayload } from '~/types/requests/auth.requests'
+import { TokenPayload } from '~/types/requests/requests'
 
 export const signToken = ({
   payload,

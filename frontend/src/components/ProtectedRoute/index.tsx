@@ -15,7 +15,8 @@ function ProtectedRoute() {
     <Navigate
       to={isAdmin ? publicAdminRoutes.signin : publicUserRoutes.signin}
       state={{
-        from: location
+        from: location,
+        search: location.search
       }}
       replace
     />

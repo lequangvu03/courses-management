@@ -50,4 +50,7 @@ export interface IStudentUpsertFormData extends Omit<IStudent, '_id' | 'created_
 export interface IQueryParams {
   limit?: number
   page?: number
+  sort_by?: string
+  sort_order?: string
+  search?: string
 }

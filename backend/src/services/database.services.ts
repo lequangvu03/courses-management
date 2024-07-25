@@ -35,6 +35,13 @@ class DatabaseService {
     try {
       await this.client.connect()
       await this.db.command({ ping: 1 })
+      await this.db.collection(envs.dbTableStudent).createIndex({
+        avatar: 'text',
+        name: 'text',
+        email: 'text',
+        phone: 'text',
+        enroll_number: 'text'
+      })
       console.log('Pinged your deployment. You successfully connected to MongoDB!')
     } catch (error) {
       console.log(error)

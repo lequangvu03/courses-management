@@ -1,6 +1,6 @@
 import User from './models/schemas/user.model'
 import { Request } from 'express'
-import { TokenPayload } from './types/requests/auth.requests'
+import { TokenPayload } from './types/requests/requests'
 import Student from './models/schemas/student.model'
 
 declare module 'express' {

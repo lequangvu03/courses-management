@@ -3,11 +3,12 @@ import { IQueryParams, IStudent, IStudentUpsertFormData } from '../types/types'
 import request from './axios'
 
 const studentsApi = {
-  getStudentList: ({ page, limit }: IQueryParams) => {
+  getStudentList: (params: IQueryParams) => {
     return request.get<GetStudentListResponse>('students', {
       params: {
-        page: page || 1,
-        limit: limit || 10
+        ...params,
+        page: (params.page && +params.page) || 1,
+        limit: (params.limit && +params.limit) || 10
       }
     })
   },

@@ -1,7 +1,48 @@
+@import '../../../styles/variables';
+
 .wrapper {
+  max-width: 1024px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   padding: 30px;
 }
 
 .form__title {
   margin-bottom: 30px;
+}
+
+.flex__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fields__group {
+  flex: 1;
+  width: 100%;
+}
+.preview__image {
+  border-radius: 100rem;
+  max-width: 100px;
+  max-height: 100px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.button__upload {
+  width: fit-content;
+  margin: 32px auto;
+}
+.button__submit {
+  padding: 12px 24px !important;
+  background: $primary;
+  color: $light;
+  height: auto;
+}
+@media screen and (max-width: 1024px) {
+  :global(.ant-form-item).field__upload {
+    width: 100%;
+    max-width: 365px;
+  }
 }

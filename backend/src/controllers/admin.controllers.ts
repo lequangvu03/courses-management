@@ -5,7 +5,7 @@ import { ServerError } from '~/models/Errors'
 import { ResponseObject } from '~/models/ResponseObject'
 import Student from '~/models/schemas/student.model'
 import adminService from '~/services/admin.services'
-import { StudentReqBody, EditStudentReqBody } from '~/types/requests/auth.requests'
+import { StudentReqBody, EditStudentReqBody, StudentQueryParamsReqQuery } from '~/types/requests/requests'
 
 export const addStudentController = async (req: Request<ParamsDictionary, any, StudentReqBody>, res: Response) => {
   await adminService.addStudent(req.body)
@@ -19,21 +19,18 @@ export const addStudentController = async (req: Request<ParamsDictionary, any, S
 }
 
 export const getStudentsController = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit)
-  const page = Number(req.query.page)
-  const result = await adminService.getStudents({
-    limit,
-    page
-  })
+  const { limit = 10, page = 1 } = req.query as StudentQueryParamsReqQuery
+
+  const result = await adminService.getStudents(req.query)
 
   res.json(
     new ResponseObject({
       message: 'Get list of students successfully',
       data: {
         students: result.students,
-        limit,
-        page,
-        total_pages: Math.ceil(result.total / limit)
+        limit: +limit,
+        page: +page,
+        total_pages: Math.ceil(result.total / +limit)
       }
     })
   )

@@ -1,4 +1,4 @@
-import { EditStudentReqBody, StudentReqBody } from '~/types/requests/auth.requests'
+import { EditStudentReqBody, StudentQueryParamsReqQuery, StudentReqBody } from '~/types/requests/requests'
 import databaseService from './database.services'
 import Student from '~/models/schemas/student.model'
 import { ObjectId } from 'mongodb'
@@ -12,12 +12,23 @@ class AdminService {
     )
   }
 
-  async getStudents({ limit, page }: { limit: number; page: number }) {
+  async getStudents(params: StudentQueryParamsReqQuery) {
+    const { limit = 10, page = 1, search, sort_by = 'created_at', sort_order } = params
+    const query = search
+      ? {
+          $or: [
+            { name: { $regex: new RegExp(search, 'i') } },
+            { phone: { $regex: new RegExp(search, 'i') } },
+            { email: { $regex: new RegExp(search, 'i') } },
+            { enroll_number: { $regex: new RegExp(search, 'i') } }
+          ]
+        }
+      : {}
     const students = await databaseService.students
-      .find({})
-      .sort({ created_at: -1 })
-      .skip(limit * (page - 1))
-      .limit(limit)
+      .find(query)
+      .sort({ [sort_by]: sort_order === 'ascend' ? 1 : -1 })
+      .skip(+limit * (+page - 1))
+      .limit(+limit)
       .toArray()
 
     const total = await databaseService.students.countDocuments()

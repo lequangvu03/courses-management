@@ -1,5 +1,6 @@
 const images = {
-  avatar: require('../images/avatar.jpg')
+  avatar: require('./avatar.jpg'),
+  placeholder: require('./placeholder.png')
 }
 
 export default images

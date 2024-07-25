@@ -14,7 +14,7 @@ import {
   getStudentByIdValidator
 } from '~/middlewares/admin.middlewares'
 import { filterMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
-import { EditStudentReqBody } from '~/types/requests/auth.requests'
+import { EditStudentReqBody } from '~/types/requests/requests'
 import { wrapRequestHandler } from '~/utils/handlers'
 
 const adminRouter = Router()

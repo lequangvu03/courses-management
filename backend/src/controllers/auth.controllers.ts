@@ -14,7 +14,7 @@ import {
   ResetPasswordReqBody,
   TokenPayload,
   VerifyOTPReqBody
-} from '~/types/requests/auth.requests'
+} from '~/types/requests/requests'
 import { Role, UserVerifyStatus } from '~/constants/enums'
 import { omit } from 'lodash'
 import ForgotPasswordOTP from '~/models/schemas/forgot-password-otp.model'

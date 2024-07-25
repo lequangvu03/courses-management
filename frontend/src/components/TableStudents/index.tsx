@@ -1,13 +1,16 @@
-import { Pagination, Popconfirm, Table, TableProps, notification } from 'antd'
+import { notification, Pagination, Popconfirm, Table, TableProps } from 'antd'
+import { SorterResult } from 'antd/es/table/interface'
 import classNames from 'classnames/bind'
-import { createSearchParams, Link, useNavigate } from 'react-router-dom'
+import { isUndefined, omitBy } from 'lodash'
+import { useTranslation } from 'react-i18next'
+import { createSearchParams, Link, URLSearchParamsInit, useNavigate } from 'react-router-dom'
 import icons from '../../assets/icons'
 import { privateAdminRoutes } from '../../config/admin.routes'
-import styles from './style.module.scss'
-import { IStudent } from '../../types/types'
 import { useDeleteStudentMutation } from '../../hooks/data/students.data'
 import useQueryParams from '../../hooks/useQueryParams'
-import { useTranslation } from 'react-i18next'
+import { IStudent } from '../../types/types'
+import styles from './style.module.scss'
+import dayjs from 'dayjs'
 
 const cx = classNames.bind(styles)
 
@@ -63,7 +66,10 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
     },
     {
       title: t('titles.date_of_admission'),
-      dataIndex: 'date_of_admission'
+      dataIndex: 'date_of_admission',
+      sorter: (a, b) => a.date_of_admission - b.date_of_admission,
+      sortDirections: ['ascend', 'descend'],
+      render: (date_of_admission) => dayjs(new Date(date_of_admission).toUTCString(), 'YYYY-MM-DD').toString()
     },
     {
       title: '',
@@ -110,6 +116,23 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
     })
   }
 
+  const onTableChange: TableProps['onChange'] = (_, filters, sorter) => {
+    const { field, order } = sorter as SorterResult<IStudent>
+    navigate({
+      pathname: privateAdminRoutes.students,
+      search: createSearchParams(
+        omitBy(
+          {
+            ...params,
+            sort_by: order && field,
+            sort_order: order
+          },
+          isUndefined
+        ) as URLSearchParamsInit
+      ).toString()
+    })
+  }
+
   return (
     <div>
       <div className={cx('table__header-wrapper')}>
@@ -127,6 +150,7 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
       </div>
       <div className={cx('table__wrapper')}>
         <Table
+          onChange={onTableChange}
           loading={loading}
           className={cx('table__students')}
           dataSource={dataSource.students}

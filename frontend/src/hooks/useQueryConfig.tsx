@@ -1,16 +1,18 @@
 import useQueryParams from './useQueryParams'
-import { isUndefined, omitBy } from 'lodash'
+import { isEmpty, isUndefined, omitBy } from 'lodash'
 import { IQueryParams } from '../types/types'
+import useDebounce from './useDebounce'
 
 function useQueryConfig(): IQueryParams {
-  const { limit, page } = useQueryParams()
+  const { search, ...rest } = useQueryParams()
+  const debouncedValue = useDebounce(search)
 
   return omitBy(
     {
-      page: (page && Number(page)) || 1,
-      limit: (limit && Number(limit)) || 10
+      ...rest,
+      search: debouncedValue
     },
-    isUndefined
+    (value) => isUndefined(value) || isEmpty(value)
   )
 }
 

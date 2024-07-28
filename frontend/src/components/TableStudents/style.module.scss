@@ -21,11 +21,13 @@
   display: flex;
   align-items: center;
 }
+
 .button__sort {
   cursor: pointer;
   background: transparent;
   border: none;
 }
+
 .button__add {
   cursor: pointer;
   border: none;
@@ -46,6 +48,13 @@
   display: flex;
   align-items: center;
   gap: 30px;
+}
+
+:global(.ant-empty) {
+  min-height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 :global(.button) {
@@ -81,12 +90,19 @@
   padding: 15px 32px 15px 13px;
 }
 
-.avatar__image {
-  height: 55px;
-  width: 65px;
-  overflow: hidden;
-  border-radius: 8px;
-  object-fit: cover;
+.avatar__wrapper {
+  :global(.ant-image) {
+    height: 55px;
+    width: 65px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: none;
+    .avatar__image {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 .table__students {
   border-collapse: separate;
@@ -99,6 +115,11 @@
 :global(.ant-table-row) {
   background: $light;
 }
+
+:global(.ant-table-column-title) {
+  white-space: nowrap;
+}
+
 @media (max-width: 1024px) {
   .table__wrapper {
     max-width: calc(100vw - 2 * 30px);

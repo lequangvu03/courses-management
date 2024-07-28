@@ -1,5 +1,5 @@
 import { GetStudentListResponse, SuccessResponse } from '../types/responses'
-import { IQueryParams, IStudent, IStudentUpsertFormData } from '../types/types'
+import { IQueryParams, IStudent } from '../types/types'
 import request from './axios'
 
 const studentsApi = {
@@ -15,11 +15,20 @@ const studentsApi = {
   getStudentById: (id: string) => {
     return request.get<SuccessResponse<IStudent>>(`student/${id}`)
   },
-  editStudent: ({ id, body }: { id: string; body: Partial<IStudentUpsertFormData> }) => {
-    return request.patch<SuccessResponse<object>>(`student/edit/${id}`, body)
+  editStudent: ({ id, body }: { id: string; body: FormData }) => {
+    console.log('Edit student: ', id)
+    return request.patch<SuccessResponse<object>>(`student/edit/${id}`, body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   },
-  addStudent: (body: IStudentUpsertFormData) => {
-    return request.post<SuccessResponse<object>>('students/add', body)
+  addStudent: (body: FormData) => {
+    return request.post<SuccessResponse<object>>('students/add', body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   },
   deleteStudent: (id: string) => {
     return request.delete(`student/${id}`)

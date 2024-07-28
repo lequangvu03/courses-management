@@ -9,9 +9,13 @@ function RejectedRoute() {
   const location = useLocation()
   const isAdmin = isAdminRoute(location.pathname)
   const redirect = `${location.state?.from?.pathname}${location.state?.from?.search}`
-  console.log(location)
+
   return isAuthenticated ? (
-    <Navigate to={isAdmin ? redirect || privateAdminRoutes.dashboard : privateUserRoutes.home} />
+    <Navigate
+      to={
+        isAdmin ? (location.state?.from?.pathname && redirect) || privateAdminRoutes.dashboard : privateUserRoutes.home
+      }
+    />
   ) : (
     <Outlet />
   )

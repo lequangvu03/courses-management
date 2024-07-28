@@ -6,7 +6,9 @@ function Payment() {
   const { t } = useTranslation()
   return (
     <div className='min-h-screen bg-[#F8F8F8] px-[30px]'>
-      {t('welcome')}
+      {t('welcome', {
+        name: 'LOUIS'
+      })}
       <TablePayment payments={payments} />
     </div>
   )

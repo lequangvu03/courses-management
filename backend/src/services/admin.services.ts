@@ -1,7 +1,12 @@
-import { EditStudentReqBody, StudentQueryParamsReqQuery, StudentReqBody } from '~/types/requests/requests'
-import databaseService from './database.services'
-import Student from '~/models/schemas/student.model'
+import { File } from 'formidable'
+import fs from 'fs'
 import { ObjectId } from 'mongodb'
+import sharp from 'sharp'
+import Student from '~/models/schemas/student.model'
+import { EditStudentReqBody, StudentQueryParamsReqQuery, StudentReqBody } from '~/types/requests/requests'
+import { getFileExtenstion, UPLOAD_IMAGES_DIR } from '~/utils/file'
+import databaseService from './database.services'
+import envs from '~/constants/env-variables'
 
 class AdminService {
   async addStudent(body: StudentReqBody) {
@@ -10,6 +15,20 @@ class AdminService {
         ...body
       })
     )
+  }
+
+  async uploadImage(files?: File[]) {
+    if (files && files[0]) {
+      const file = files[0]
+      const { newFilename } = file
+      const ext = getFileExtenstion(file.originalFilename as string)
+      const filePath = `${UPLOAD_IMAGES_DIR}/${newFilename}.jpg`
+      const oldFilePath = `${file.filepath}.${ext}`
+      await sharp(oldFilePath).jpeg().toFile(filePath)
+      fs.unlinkSync(oldFilePath)
+      return `http://localhost:${envs.port}/images/${newFilename}.jpg`
+    }
+    return ''
   }
 
   async getStudents(params: StudentQueryParamsReqQuery) {

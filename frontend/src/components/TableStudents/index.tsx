@@ -1,6 +1,7 @@
-import { notification, Pagination, Popconfirm, Table, TableProps } from 'antd'
+import { Image, notification, Pagination, Popconfirm, Table, TableProps } from 'antd'
 import { SorterResult } from 'antd/es/table/interface'
 import classNames from 'classnames/bind'
+import dayjs from 'dayjs'
 import { isUndefined, omitBy } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { createSearchParams, Link, URLSearchParamsInit, useNavigate } from 'react-router-dom'
@@ -10,7 +11,7 @@ import { useDeleteStudentMutation } from '../../hooks/data/students.data'
 import useQueryParams from '../../hooks/useQueryParams'
 import { IStudent } from '../../types/types'
 import styles from './style.module.scss'
-import dayjs from 'dayjs'
+import images from '../../assets/images'
 
 const cx = classNames.bind(styles)
 
@@ -36,40 +37,40 @@ function TableStudents({ dataSource, loading }: TableStudentsProps) {
       dataIndex: 'avatar',
       render: (url) => (
         <div className={cx('avatar__wrapper')}>
-          <img src={url} className={cx('avatar__image')} alt='avatar' />
+          <Image src={url} fallback={images.placeholder} className={cx('avatar__image')} alt='avatar' />
         </div>
       )
     },
     {
       title: t('titles.name'),
       dataIndex: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       sortDirections: ['ascend', 'descend']
     },
     {
       title: t('titles.email'),
       dataIndex: 'email',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       sortDirections: ['ascend', 'descend']
     },
     {
       title: t('titles.phone'),
       dataIndex: 'phone',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       sortDirections: ['ascend', 'descend']
     },
     {
       title: t('titles.enroll_number'),
       dataIndex: 'enroll_number',
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: true,
       sortDirections: ['ascend', 'descend']
     },
     {
       title: t('titles.date_of_admission'),
       dataIndex: 'date_of_admission',
-      sorter: (a, b) => a.date_of_admission - b.date_of_admission,
+      sorter: true,
       sortDirections: ['ascend', 'descend'],
-      render: (date_of_admission) => dayjs(new Date(date_of_admission).toUTCString(), 'YYYY-MM-DD').toString()
+      render: (date_of_admission) => <span>{dayjs(new Date(date_of_admission)).toString()}</span>
     },
     {
       title: '',

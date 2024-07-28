@@ -39,6 +39,26 @@ export const paginationValidator = validate(
             return true
           }
         }
+      },
+      search: {
+        optional: true,
+        isString: true,
+        trim: true,
+        escape: true
+      },
+      sortBy: {
+        optional: true,
+        isIn: {
+          options: [['name', 'email', 'date_of_admission', 'created_at']],
+          errorMessage: 'Invalid sort field'
+        }
+      },
+      sortOrder: {
+        optional: true,
+        isIn: {
+          options: [['ascend', 'descend']],
+          errorMessage: 'Invalid sort order'
+        }
       }
     },
     ['query']

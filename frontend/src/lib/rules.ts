@@ -6,7 +6,6 @@ type Keys = keyof IStudentUpsertFormData | keyof IRegisterFormData
 const rules: Record<Keys, Rule[]> = {
   email: [
     {
-      required: true,
       whitespace: true,
       message: 'Email is required'
     },

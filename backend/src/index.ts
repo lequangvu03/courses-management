@@ -7,9 +7,11 @@ import path from 'path'
 import envs from './constants/env-variables'
 import adminRouter from './routes/admin.routes'
 import cookieParser from 'cookie-parser'
+import { initUploadFolder, UPLOAD_IMAGES_DIR } from './utils/file'
 const PORT = envs.port || 4000
 const app = express()
 
+initUploadFolder()
 // ejs
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
@@ -25,7 +27,9 @@ app.use(
   })
 )
 
+app.use('/images', express.static(UPLOAD_IMAGES_DIR))
 app.use(cookieParser())
+
 // Routes
 app.use('/api/auth', authRouter)
 app.use('/api', adminRouter)

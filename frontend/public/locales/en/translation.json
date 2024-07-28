@@ -1,5 +1,5 @@
 {
-  "welcome": "Welcome you to LOUIS",
+  "welcome": "Welcome you to {{name}}",
   "nav_links": {
     "Home": "Home",
     "Course": "Course",

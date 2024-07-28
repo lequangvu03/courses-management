@@ -45,6 +45,7 @@ function Header() {
             <LanguageSwitcher trigger={['click']} placement='bottomRight' />
             <div className={cx('search__input')}>
               <input
+                defaultValue={params.search || ''}
                 onChange={onInputSearchChange}
                 placeholder={t('inputs.search.placeholder')}
                 className={cx('input')}

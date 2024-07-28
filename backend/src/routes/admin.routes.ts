@@ -11,7 +11,8 @@ import {
   adminValidator,
   deleteStudentValidator,
   editStudentValidator,
-  getStudentByIdValidator
+  getStudentByIdValidator,
+  parseRequest
 } from '~/middlewares/admin.middlewares'
 import { filterMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import { EditStudentReqBody } from '~/types/requests/requests'
@@ -50,7 +51,14 @@ adminRouter.get('/student/:id', adminValidator, getStudentByIdValidator, wrapReq
          }
  */
 
-adminRouter.post('/students/add', adminValidator, addStudentValidator, wrapRequestHandler(addStudentController))
+adminRouter.post(
+  '/students/add',
+  adminValidator,
+  parseRequest,
+  addStudentValidator,
+  filterMiddleware<EditStudentReqBody>(['avatar', 'date_of_admission', 'enroll_number', 'name', 'phone']),
+  wrapRequestHandler(addStudentController)
+)
 
 /**
  * path: /student/edit/:id
@@ -69,9 +77,10 @@ adminRouter.post('/students/add', adminValidator, addStudentValidator, wrapReque
 
 adminRouter.patch(
   '/student/edit/:id',
-  adminValidator,
-  editStudentValidator,
-  filterMiddleware<EditStudentReqBody>(['avatar', 'date_of_admission', 'enroll_number', 'name', 'email', 'phone']),
+  // adminValidator,
+  parseRequest,
+  // editStudentValidator,
+  // filterMiddleware<EditStudentReqBody>(['avatar', 'date_of_admission', 'enroll_number', 'name', 'phone']),
   wrapRequestHandler(editStudentController)
 )
 

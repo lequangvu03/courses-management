@@ -1,3 +1,5 @@
+import { UploadChangeParam } from 'antd/es/upload'
+import { Dayjs } from 'dayjs'
 import { Role, UserVerifyStatus } from '../constants/enums'
 
 export interface IUser {
@@ -45,7 +47,14 @@ export interface IResetPasswordFormData {
   role?: Role
 }
 
-export interface IStudentUpsertFormData extends Omit<IStudent, '_id' | 'created_at' | 'updated_at'> {}
+export interface IStudentUpsertFormData {
+  avatar: UploadChangeParam
+  name: string
+  email: string
+  phone: string
+  enroll_number: string
+  date_of_admission: string | Dayjs
+}
 
 export interface IQueryParams {
   limit?: number

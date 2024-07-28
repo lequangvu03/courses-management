@@ -16,6 +16,7 @@ interface InputProps {
   type?: 'password' | 'text'
   hidden?: boolean
   autoComplete?: 'on' | 'off'
+  disabled?: boolean
 }
 
 function Input({
@@ -28,7 +29,8 @@ function Input({
   dependencies,
   type = 'text',
   hidden,
-  autoComplete = 'off'
+  autoComplete = 'off',
+  disabled
 }: InputProps) {
   const InputComponent = type === 'password' ? AntInput.Password : AntInput
   return (
@@ -40,7 +42,12 @@ function Input({
       dependencies={dependencies}
       hidden={hidden}
     >
-      <InputComponent autoComplete={autoComplete} className={cx('field__input', className)} placeholder={placeholder} />
+      <InputComponent
+        disabled={disabled}
+        autoComplete={autoComplete}
+        className={cx('field__input', className)}
+        placeholder={placeholder}
+      />
     </Form.Item>
   )
 }

@@ -30,3 +30,7 @@ export type GetStudentListResponse = SuccessResponse<{
   total_pages: number
   students: IStudent[]
 }>
+
+// export type StudentFormDataResponse = SuccessResponse<{
+
+// }>
